@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class GenderArrow extends AnimatedWidget {
-  const GenderArrow({Key key, Listenable listenable})
-      : super(key: key, listenable: listenable);
+  const GenderArrow({Key? key, required Animation<double> animation})
+    : super(key: key, listenable: animation);
+
+  Animation<double> get animation => listenable as Animation<double>;
 
   double _arrowLength(BuildContext context) => screenAwareSize(32.0, context);
 
@@ -14,7 +16,6 @@ class GenderArrow extends AnimatedWidget {
 
   @override
   Widget build(BuildContext context) {
-    Animation animation = listenable;
     return Transform.rotate(
       angle: animation.value,
       child: Transform.translate(

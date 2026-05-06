@@ -8,8 +8,8 @@ class WeightCard extends StatelessWidget {
   final int weight;
   final ValueChanged<int> onChanged;
 
-  const WeightCard({Key key, this.weight = 70, this.onChanged})
-      : super(key: key);
+  const WeightCard({Key? key, this.weight = 70, required this.onChanged})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,8 @@ class WeightCard extends StatelessWidget {
             child: Center(
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: screenAwareSize(16.0, context)),
+                  horizontal: screenAwareSize(16.0, context),
+                ),
                 child: _drawSlider(),
               ),
             ),
@@ -59,7 +60,7 @@ class WeightCard extends StatelessWidget {
 class WeightBackground extends StatelessWidget {
   final Widget child;
 
-  const WeightBackground({Key key, this.child}) : super(key: key);
+  const WeightBackground({Key? key, required this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -69,9 +70,10 @@ class WeightBackground extends StatelessWidget {
         Container(
           height: screenAwareSize(100.0, context),
           decoration: BoxDecoration(
-            color: Color.fromRGBO(244, 244, 244, 1.0),
-            borderRadius:
-                new BorderRadius.circular(screenAwareSize(50.0, context)),
+            color: Color.fromRGBO(109, 250, 99, 1.0),
+            borderRadius: new BorderRadius.circular(
+              screenAwareSize(50.0, context),
+            ),
           ),
           child: child,
         ),

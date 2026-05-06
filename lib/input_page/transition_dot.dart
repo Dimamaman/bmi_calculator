@@ -4,25 +4,19 @@ import 'package:bmi_calculator/widget_utils.dart';
 import 'package:flutter/material.dart';
 
 class TransitionDot extends AnimatedWidget {
-  TransitionDot({Key key, Listenable animation})
-      : super(key: key, listenable: animation);
+  TransitionDot({Key? key, required Animation<double> animation})
+    : super(key: key, listenable: animation);
+
+  Animation<double> get animation => listenable as Animation<double>;
 
   Animation<int> get positionAnimation => IntTween(
-        begin: 0,
-        end: 50,
-      ).animate(
-        CurvedAnimation(
-          parent: super.listenable,
-          curve: Interval(0.15, 0.3),
-        ),
-      );
+    begin: 0,
+    end: 50,
+  ).animate(CurvedAnimation(parent: animation, curve: Interval(0.15, 0.3)));
 
   Animation<double> get sizeAnimation => LoopedSizeAnimation().animate(
-        CurvedAnimation(
-          parent: super.listenable,
-          curve: Interval(0.3, 1.0),
-        ),
-      );
+    CurvedAnimation(parent: animation, curve: Interval(0.3, 1.0)),
+  );
 
   @override
   Widget build(BuildContext context) {

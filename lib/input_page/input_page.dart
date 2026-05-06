@@ -19,7 +19,7 @@ class InputPage extends StatefulWidget {
 }
 
 class InputPageState extends State<InputPage> with TickerProviderStateMixin {
-  AnimationController _submitAnimationController;
+  late AnimationController _submitAnimationController;
   Gender gender = Gender.other;
   int height = 180;
   int weight = 70;
@@ -56,11 +56,7 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              InputSummaryCard(
-                gender: gender,
-                weight: weight,
-                height: height,
-              ),
+              InputSummaryCard(gender: gender, weight: weight, height: height),
               Expanded(child: _buildCards(context)),
               _buildBottom(context),
             ],
@@ -97,7 +93,7 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
             height: height,
             onChanged: (val) => setState(() => height = val),
           ),
-        )
+        ),
       ],
     );
   }
@@ -122,13 +118,12 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
   }
 
   _goToResultPage() async {
-    return Navigator.of(context).push(FadeRoute(
-      builder: (context) => ResultPage(
-            weight: weight,
-            height: height,
-            gender: gender,
-          ),
-    ));
+    return Navigator.of(context).push(
+      FadeRoute(
+        builder: (context) =>
+            ResultPage(weight: weight, height: height, gender: gender),
+      ),
+    );
   }
 }
 
@@ -137,8 +132,12 @@ class InputSummaryCard extends StatelessWidget {
   final int height;
   final int weight;
 
-  const InputSummaryCard({Key key, this.gender, this.height, this.weight})
-      : super(key: key);
+  const InputSummaryCard({
+    Key? key,
+    required this.gender,
+    required this.height,
+    required this.weight,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -178,9 +177,6 @@ class InputSummaryCard extends StatelessWidget {
   }
 
   Widget _divider() {
-    return Container(
-      width: 1.0,
-      color: Color.fromRGBO(151, 151, 151, 0.1),
-    );
+    return Container(width: 1.0, color: Color.fromRGBO(151, 151, 151, 0.1));
   }
 }

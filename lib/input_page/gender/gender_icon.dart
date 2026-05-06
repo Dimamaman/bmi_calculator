@@ -8,7 +8,11 @@ class GenderIconTranslated extends StatelessWidget {
   final Gender gender;
   final bool isSelected;
 
-  const GenderIconTranslated({Key key, this.gender, this.isSelected = false}) : super(key: key);
+  const GenderIconTranslated({
+    Key? key,
+    required this.gender,
+    this.isSelected = false,
+  }) : super(key: key);
 
   static final Map<Gender, String> _genderImages = {
     Gender.female: "images/gender_female.svg",
@@ -18,7 +22,7 @@ class GenderIconTranslated extends StatelessWidget {
 
   bool get _isOtherGender => gender == Gender.other;
 
-  String get _assetName => _genderImages[gender];
+  String get _assetName => _genderImages[gender]!;
 
   double _iconSize(BuildContext context) {
     return screenAwareSize(_isOtherGender ? 22.0 : 16.0, context);
@@ -36,12 +40,17 @@ class GenderIconTranslated extends StatelessWidget {
         _assetName,
         height: _iconSize(context),
         width: _iconSize(context),
-        color: isSelected ? null : Color.fromRGBO(143, 144, 156, 1.0),
+        colorFilter: isSelected
+            ? null
+            : ColorFilter.mode(
+                Color.fromRGBO(143, 144, 156, 1.0),
+                BlendMode.srcIn,
+              ),
       ),
     );
 
     Widget rotatedIcon = Transform.rotate(
-      angle: -genderAngles[gender],
+      angle: -genderAngles[gender]!,
       child: icon,
     );
 
@@ -49,16 +58,13 @@ class GenderIconTranslated extends StatelessWidget {
       padding: EdgeInsets.only(bottom: circleSize(context) / 2),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          rotatedIcon,
-          GenderLine(),
-        ],
+        children: <Widget>[rotatedIcon, GenderLine()],
       ),
     );
 
     Widget rotatedIconWithALine = Transform.rotate(
       alignment: Alignment.bottomCenter,
-      angle: genderAngles[gender],
+      angle: genderAngles[gender]!,
       child: iconWithALine,
     );
 
@@ -82,7 +88,7 @@ class GenderLine extends StatelessWidget {
       child: Container(
         height: screenAwareSize(8.0, context),
         width: 1.0,
-        color: Color.fromRGBO(216, 217, 223, 0.54),
+        color: Color.fromRGBO(172, 23, 66, 0.5411764705882353),
       ),
     );
   }

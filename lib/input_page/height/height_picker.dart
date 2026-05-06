@@ -13,14 +13,14 @@ class HeightPicker extends StatefulWidget {
   final double widgetHeight;
   final ValueChanged<int> onChange;
 
-  const HeightPicker(
-      {Key key,
-      this.height,
-      this.widgetHeight,
-      this.onChange,
-      this.maxHeight = 190,
-      this.minHeight = 145})
-      : super(key: key);
+  const HeightPicker({
+    Key? key,
+    required this.height,
+    required this.widgetHeight,
+    required this.onChange,
+    this.maxHeight = 190,
+    this.minHeight = 145,
+  }) : super(key: key);
 
   int get totalUnits => maxHeight - minHeight;
 
@@ -29,8 +29,8 @@ class HeightPicker extends StatefulWidget {
 }
 
 class _HeightPickerState extends State<HeightPicker> {
-  double startDragYOffset;
-  int startDragHeight;
+  late double startDragYOffset;
+  late int startDragHeight;
 
   double get _pixelsPerUnit {
     return _drawingHeight / widget.totalUnits;
@@ -58,11 +58,7 @@ class _HeightPickerState extends State<HeightPicker> {
       onVerticalDragStart: _onDragStart,
       onVerticalDragUpdate: _onDragUpdate,
       child: Stack(
-        children: <Widget>[
-          _drawPersonImage(),
-          _drawSlider(),
-          _drawLabels(),
-        ],
+        children: <Widget>[_drawPersonImage(), _drawSlider(), _drawLabels()],
       ),
     );
   }
@@ -77,7 +73,7 @@ class _HeightPickerState extends State<HeightPicker> {
   }
 
   int _globalOffsetToHeight(Offset globalOffset) {
-    RenderBox getBox = context.findRenderObject();
+    RenderBox getBox = context.findRenderObject() as RenderBox;
     Offset localPosition = getBox.globalToLocal(globalOffset);
     double dy = localPosition.dy;
     dy = dy - marginTopAdapted(context) - labelsFontSize / 2;
@@ -113,15 +109,9 @@ class _HeightPickerState extends State<HeightPicker> {
 
   Widget _drawLabels() {
     int labelsToDisplay = widget.totalUnits ~/ 5 + 1;
-    List<Widget> labels = List.generate(
-      labelsToDisplay,
-      (idx) {
-        return Text(
-          "${widget.maxHeight - 5 * idx}",
-          style: labelsTextStyle,
-        );
-      },
-    );
+    List<Widget> labels = List.generate(labelsToDisplay, (idx) {
+      return Text("${widget.maxHeight - 5 * idx}", style: labelsTextStyle);
+    });
 
     return Align(
       alignment: Alignment.centerRight,

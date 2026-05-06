@@ -1,20 +1,19 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 class WeightSlider extends StatelessWidget {
   WeightSlider({
-    Key key,
-    @required this.minValue,
-    @required this.maxValue,
-    @required this.value,
-    @required this.onChanged,
-    @required this.width,
-  })  : scrollController = new ScrollController(
-          initialScrollOffset: (value - minValue) * width / 3,
-        ),
-        super(key: key);
+    Key? key,
+    required this.minValue,
+    required this.maxValue,
+    required this.value,
+    required this.onChanged,
+    required this.width,
+  }) : scrollController = new ScrollController(
+         initialScrollOffset: (value - minValue) * width / 3,
+       ),
+       super(key: key);
 
   final int minValue;
   final int maxValue;
@@ -68,10 +67,7 @@ class WeightSlider extends StatelessWidget {
   }
 
   TextStyle _getHighlightTextStyle(BuildContext context) {
-    return new TextStyle(
-      color: Theme.of(context).primaryColor,
-      fontSize: 28.0,
-    );
+    return new TextStyle(color: Theme.of(context).primaryColor, fontSize: 28.0);
   }
 
   TextStyle _getTextStyle(BuildContext context, int itemValue) {
@@ -81,9 +77,7 @@ class WeightSlider extends StatelessWidget {
   }
 
   bool _userStoppedScrolling(Notification notification) {
-    return notification is UserScrollNotification &&
-        notification.direction == ScrollDirection.idle &&
-        scrollController.position.activity is! HoldScrollActivity;
+    return notification is ScrollEndNotification;
   }
 
   _animateTo(int valueToSelect, {int durationMillis = 200}) {

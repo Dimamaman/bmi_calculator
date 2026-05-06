@@ -5,17 +5,20 @@ import 'package:flutter/services.dart';
 import 'styles.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
       statusBarColor: Colors.white, //top bar color
       statusBarIconBrightness: Brightness.dark, //top bar icons
       systemNavigationBarColor: Colors.white, //bottom bar color
       systemNavigationBarIconBrightness: Brightness.dark, //bottom bar icons
-    )
+    ),
   );
-  SystemChrome.setPreferredOrientations(
-          [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
-      .then((_) => runApp(new MyApp()));
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]).then((_) => runApp(new MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -24,10 +27,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'BMI Calculator',
-      theme: ThemeData(
-        primaryColor: mainBlue,
-        fontFamily: 'SF Pro Display',
-      ),
+      theme: ThemeData(primaryColor: mainBlue, fontFamily: 'SF Pro Display'),
       home: InputPage(),
     );
   }

@@ -7,8 +7,8 @@ class HeightCard extends StatelessWidget {
   final int height;
   final ValueChanged<int> onChanged;
 
-  const HeightCard({Key key, this.height = 170, this.onChanged})
-      : super(key: key);
+  const HeightCard({Key? key, this.height = 170, required this.onChanged})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +24,15 @@ class HeightCard extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: EdgeInsets.only(bottom: screenAwareSize(8.0, context)),
-              child: LayoutBuilder(builder: (context, constraints) {
-                return HeightPicker(
-                  widgetHeight: constraints.maxHeight,
-                  height: height,
-                  onChange: (val) => onChanged(val),
-                );
-              }),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return HeightPicker(
+                    widgetHeight: constraints.maxHeight,
+                    height: height,
+                    onChange: (val) => onChanged(val),
+                  );
+                },
+              ),
             ),
           ),
         ],

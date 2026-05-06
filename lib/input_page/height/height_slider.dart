@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class HeightSlider extends StatelessWidget {
   final int height;
 
-  const HeightSlider({Key key, this.height}) : super(key: key);
+  const HeightSlider({Key? key, required this.height}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class HeightSlider extends StatelessWidget {
 class SliderLabel extends StatelessWidget {
   final int height;
 
-  const SliderLabel({Key key, this.height}) : super(key: key);
+  const SliderLabel({Key? key, required this.height}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,16 +57,16 @@ class SliderLine extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       mainAxisSize: MainAxisSize.max,
       children: List.generate(
-          40,
-          (i) => Expanded(
-                child: Container(
-                  height: 2.0,
-                  decoration: BoxDecoration(
-                      color: i.isEven
-                          ? Theme.of(context).primaryColor
-                          : Colors.white),
-                ),
-              )),
+        40,
+        (i) => Expanded(
+          child: Container(
+            height: 2.0,
+            decoration: BoxDecoration(
+              color: i.isEven ? Theme.of(context).primaryColor : Colors.white,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

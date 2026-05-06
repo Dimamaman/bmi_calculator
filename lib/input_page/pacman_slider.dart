@@ -12,8 +12,11 @@ class PacmanSlider extends StatefulWidget {
   final VoidCallback onSubmit;
   final AnimationController submitAnimationController;
 
-  const PacmanSlider({Key key, this.onSubmit, this.submitAnimationController})
-      : super(key: key);
+  const PacmanSlider({
+    Key? key,
+    required this.onSubmit,
+    required this.submitAnimationController,
+  }) : super(key: key);
 
   @override
   _PacmanSliderState createState() => _PacmanSliderState();
@@ -22,23 +25,28 @@ class PacmanSlider extends StatefulWidget {
 class _PacmanSliderState extends State<PacmanSlider>
     with TickerProviderStateMixin {
   double _pacmanPosition = 24.0;
-  Animation<BorderRadius> _bordersAnimation;
-  Animation<double> _submitWidthAnimation;
-  AnimationController pacmanMovementController;
-  Animation<double> pacmanAnimation;
+  late Animation<BorderRadius?> _bordersAnimation;
+  late Animation<double> _submitWidthAnimation;
+  late AnimationController pacmanMovementController;
+  late Animation<double> pacmanAnimation;
 
   @override
   void initState() {
     super.initState();
-    pacmanMovementController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 400));
-    _bordersAnimation = BorderRadiusTween(
-      begin: BorderRadius.circular(8.0),
-      end: BorderRadius.circular(50.0),
-    ).animate(CurvedAnimation(
-      parent: widget.submitAnimationController,
-      curve: Interval(0.0, 0.07),
-    ));
+    pacmanMovementController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 400),
+    );
+    _bordersAnimation =
+        BorderRadiusTween(
+          begin: BorderRadius.circular(8.0),
+          end: BorderRadius.circular(50.0),
+        ).animate(
+          CurvedAnimation(
+            parent: widget.submitAnimationController,
+            curve: Interval(0.0, 0.07),
+          ),
+        );
   }
 
   @override
@@ -47,19 +55,22 @@ class _PacmanSliderState extends State<PacmanSlider>
     super.dispose();
   }
 
-  double get width => _submitWidthAnimation?.value ?? 0.0;
+  double get width => _submitWidthAnimation.value;
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        _submitWidthAnimation = Tween<double>(
-          begin: constraints.maxWidth,
-          end: screenAwareSize(52.0, context),
-        ).animate(CurvedAnimation(
-          parent: widget.submitAnimationController,
-          curve: Interval(0.05, 0.15),
-        ));
+        _submitWidthAnimation =
+            Tween<double>(
+              begin: constraints.maxWidth,
+              end: screenAwareSize(52.0, context),
+            ).animate(
+              CurvedAnimation(
+                parent: widget.submitAnimationController,
+                curve: Interval(0.05, 0.15),
+              ),
+            );
         return AnimatedBuilder(
           animation: widget.submitAnimationController,
           builder: (context, child) {
@@ -120,7 +131,7 @@ class _PacmanSliderState extends State<PacmanSlider>
   }
 
   Animation<double> _initPacmanAnimation() {
-    Animation<double> animation = Tween(
+    Animation<double> animation = Tween<double>(
       begin: _pacmanMinPosition(),
       end: _pacmanMaxPosition(width),
     ).animate(pacmanMovementController);
@@ -137,22 +148,24 @@ class _PacmanSliderState extends State<PacmanSlider>
   }
 
   _onPacmanSubmited() {
-    widget?.onSubmit();
+    widget.onSubmit();
     Future.delayed(Duration(seconds: 1), () => _resetPacman());
   }
 
   _onPacmanDrag(double width, DragUpdateDetails details) {
     setState(() {
       _pacmanPosition += details.delta.dx;
-      _pacmanPosition = math.max(_pacmanMinPosition(),
-          math.min(_pacmanMaxPosition(width), _pacmanPosition));
+      _pacmanPosition = math.max(
+        _pacmanMinPosition(),
+        math.min(_pacmanMaxPosition(width), _pacmanPosition),
+      );
     });
   }
 
   _onPacmanEnd(double width, DragEndDetails details) {
     bool isOverHalf =
         _pacmanPosition + screenAwareSize(_pacmanWidth / 2, context) >
-            0.5 * width;
+        0.5 * width;
     if (isOverHalf) {
       _animatePacmanToEnd();
     } else {
@@ -162,7 +175,8 @@ class _PacmanSliderState extends State<PacmanSlider>
 
   _animatePacmanToEnd() {
     pacmanMovementController.forward(
-        from: _pacmanPosition / _pacmanMaxPosition(width));
+      from: _pacmanPosition / _pacmanMaxPosition(width),
+    );
   }
 
   _resetPacman() {
@@ -189,7 +203,7 @@ class _AnimatedDotsState extends State<AnimatedDots>
   final int numberOfDots = 10;
   final double minOpacity = 0.1;
   final double maxOpacity = 0.5;
-  AnimationController hintAnimationController;
+  late AnimationController hintAnimationController;
 
   @override
   void initState() {
@@ -224,17 +238,16 @@ class _AnimatedDotsState extends State<AnimatedDots>
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-          left: screenAwareSize(
-              _sliderHorizontalMargin + _pacmanWidth + _dotsLeftMargin,
-              context),
-          right: screenAwareSize(_sliderHorizontalMargin, context)),
+        left: screenAwareSize(
+          _sliderHorizontalMargin + _pacmanWidth + _dotsLeftMargin,
+          context,
+        ),
+        right: screenAwareSize(_sliderHorizontalMargin, context),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: List.generate(numberOfDots, _generateDot)
-          ..add(Opacity(
-            opacity: maxOpacity,
-            child: Dot(size: 14.0),
-          )),
+          ..add(Opacity(opacity: maxOpacity, child: Dot(size: 14.0))),
       ),
     );
   }
@@ -243,10 +256,8 @@ class _AnimatedDotsState extends State<AnimatedDots>
     Animation animation = _initDotAnimation(dotNumber);
     return AnimatedBuilder(
       animation: animation,
-      builder: (context, child) => Opacity(
-            opacity: animation.value,
-            child: child,
-          ),
+      builder: (context, child) =>
+          Opacity(opacity: animation.value, child: child),
       child: Dot(size: 9.0),
     );
   }
@@ -266,7 +277,7 @@ class _AnimatedDotsState extends State<AnimatedDots>
 }
 
 class SinusoidalAnimation extends Animatable<double> {
-  SinusoidalAnimation({this.min, this.max});
+  SinusoidalAnimation({required this.min, required this.max});
 
   final double min;
   final double max;
@@ -280,17 +291,14 @@ class SinusoidalAnimation extends Animatable<double> {
 class Dot extends StatelessWidget {
   final double size;
 
-  const Dot({Key key, @required this.size}) : super(key: key);
+  const Dot({Key? key, required this.size}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: screenAwareSize(size, context),
       width: screenAwareSize(size, context),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.white,
-      ),
+      decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
     );
   }
 }
@@ -299,9 +307,7 @@ class PacmanIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-        right: screenAwareSize(16.0, context),
-      ),
+      padding: EdgeInsets.only(right: screenAwareSize(16.0, context)),
       child: SvgPicture.asset(
         'images/pacman.svg',
         height: screenAwareSize(25.0, context),
