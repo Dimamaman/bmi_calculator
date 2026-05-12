@@ -18,8 +18,8 @@ class HeightPicker extends StatefulWidget {
     required this.height,
     required this.widgetHeight,
     required this.onChange,
-    this.maxHeight = 190,
-    this.minHeight = 145,
+    this.maxHeight = 250,
+    this.minHeight = 120,
   }) : super(key: key);
 
   int get totalUnits => maxHeight - minHeight;
@@ -57,8 +57,11 @@ class _HeightPickerState extends State<HeightPicker> {
       onTapDown: _onTapDown,
       onVerticalDragStart: _onDragStart,
       onVerticalDragUpdate: _onDragUpdate,
-      child: Stack(
-        children: <Widget>[_drawPersonImage(), _drawSlider(), _drawLabels()],
+      child: SizedBox(
+        height: widget.widgetHeight,
+        child: Stack(
+          children: <Widget>[_drawPersonImage(), _drawSlider(), _drawLabels()],
+        ),
       ),
     );
   }
@@ -108,10 +111,10 @@ class _HeightPickerState extends State<HeightPicker> {
   }
 
   Widget _drawLabels() {
-    int labelsToDisplay = widget.totalUnits ~/ 5 + 1;
+    int labelsToDisplay = widget.totalUnits ~/ 10 + 1;
 
     List<Widget> labels = List.generate(labelsToDisplay, (idx) {
-      return Text("${widget.maxHeight - 5 * idx}", style: labelsTextStyle);
+      return Text("${widget.maxHeight - 10 * idx}", style: labelsTextStyle);
     });
 
     return Align(

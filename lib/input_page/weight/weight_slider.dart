@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class WeightSlider extends StatelessWidget {
   WeightSlider({
@@ -77,7 +78,8 @@ class WeightSlider extends StatelessWidget {
   }
 
   bool _userStoppedScrolling(Notification notification) {
-    return notification is ScrollEndNotification;
+    return notification is UserScrollNotification &&
+        notification.direction == ScrollDirection.idle;
   }
 
   _animateTo(int valueToSelect, {int durationMillis = 200}) {
