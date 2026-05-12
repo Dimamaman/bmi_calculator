@@ -53,7 +53,10 @@ class FadeScaleRoute<T> extends MaterialPageRoute<T> {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    final curved = CurvedAnimation(parent: animation, curve: Curves.easeOutBack);
+    final curved = CurvedAnimation(
+      parent: animation,
+      curve: Curves.easeOutBack,
+    );
     return FadeTransition(
       opacity: animation,
       child: ScaleTransition(scale: curved, child: child),
@@ -158,6 +161,28 @@ class RotationRoute<T> extends MaterialPageRoute<T> {
   }
 }
 
+Future<T?> showScaleDialog<T>({
+  required BuildContext context,
+  required WidgetBuilder builder,
+  bool barrierDismissible = true,
+  Duration transitionDuration = const Duration(milliseconds: 350),
+}) {
+  return showGeneralDialog<T>(
+    context: context,
+    barrierDismissible: barrierDismissible,
+    barrierLabel: "Dismiss",
+    barrierColor: Colors.black54,
+    transitionDuration: transitionDuration,
+    transitionBuilder: (context, animation, secondaryAnimation, child) {
+      return ScaleTransition(
+        scale: CurvedAnimation(parent: animation, curve: Curves.easeOutCubic),
+        child: child,
+      );
+    },
+    pageBuilder: (context, _, __) => builder(context),
+  );
+}
+
 // Ozgina pastdan + xira bo'lib chiqadi (smooth)
 class SlideAndFadeRoute<T> extends MaterialPageRoute<T> {
   SlideAndFadeRoute({required WidgetBuilder builder, RouteSettings? settings})
@@ -173,7 +198,10 @@ class SlideAndFadeRoute<T> extends MaterialPageRoute<T> {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    final curved = CurvedAnimation(parent: animation, curve: Curves.easeOutCubic);
+    final curved = CurvedAnimation(
+      parent: animation,
+      curve: Curves.easeOutCubic,
+    );
     return FadeTransition(
       opacity: animation,
       child: SlideTransition(

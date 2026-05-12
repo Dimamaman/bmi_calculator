@@ -67,18 +67,19 @@ class _ExampleGenderCardState extends State<ExampleGenderCard>
     return Container(
       width: 200,
       height: 200,
-      color: Colors.blue.withOpacity(0.5),
+      color: Colors.amber.withOpacity(0.5),
+      padding: EdgeInsets.all(20),
       child: Stack(
         alignment: Alignment.center,
         children: <Widget>[
-          Container(
-            width: circleSize(context),
-            height: circleSize(context),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Color.fromRGBO(95, 246, 120, 1.0),
-            ),
-          ),
+          // Container(
+          //   width: circleSize(context),
+          //   height: circleSize(context),
+          //   decoration: BoxDecoration(
+          //     shape: BoxShape.circle,
+          //     color: Color.fromRGBO(95, 246, 120, 1.0),
+          //   ),
+          // ),
           ExampleGenderArrow(animation: _arrowAnimationController),
           ExampleGenderIconTranslated(
             gender: Gender.female,
@@ -96,45 +97,36 @@ class _ExampleGenderCardState extends State<ExampleGenderCard>
             child: Row(
               children: <Widget>[
                 Expanded(
-                  child: Container(
-                    color: Colors.red.withOpacity(0.3),
-                    child: GestureDetector(
-                      onTap: () {
-                        widget.onChanged(Gender.female);
-                        _arrowAnimationController.animateTo(
-                          genderAngles[Gender.female]!,
-                          duration: Duration(milliseconds: 150),
-                        );
-                      },
-                    ),
+                  child: GestureDetector(
+                    onTap: () {
+                      widget.onChanged(Gender.female);
+                      _arrowAnimationController.animateTo(
+                        genderAngles[Gender.female]!,
+                        duration: Duration(milliseconds: 150),
+                      );
+                    },
                   ),
                 ),
                 Expanded(
-                  child: Container(
-                    color: Colors.amber.withOpacity(0.3),
-                    child: GestureDetector(
-                      onTap: () {
-                        widget.onChanged(Gender.other);
-                        _arrowAnimationController.animateTo(
-                          genderAngles[Gender.other]!,
-                          duration: Duration(milliseconds: 150),
-                        );
-                      },
-                    ),
+                  child: GestureDetector(
+                    onTap: () {
+                      widget.onChanged(Gender.other);
+                      _arrowAnimationController.animateTo(
+                        genderAngles[Gender.other]!,
+                        duration: Duration(milliseconds: 150),
+                      );
+                    },
                   ),
                 ),
                 Expanded(
-                  child: Container(
-                    color: Colors.purpleAccent.withOpacity(0.3),
-                    child: GestureDetector(
-                      onTap: () {
-                        widget.onChanged(Gender.male);
-                        _arrowAnimationController.animateTo(
-                          genderAngles[Gender.male]!,
-                          duration: Duration(milliseconds: 150),
-                        );
-                      },
-                    ),
+                  child: GestureDetector(
+                    onTap: () {
+                      widget.onChanged(Gender.male);
+                      _arrowAnimationController.animateTo(
+                        genderAngles[Gender.male]!,
+                        duration: Duration(milliseconds: 150),
+                      );
+                    },
                   ),
                 ),
               ],

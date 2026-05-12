@@ -38,9 +38,13 @@ class BmiAppBar extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: () {
-            Navigator.push(
-              context,
-              ScaleRoute(builder: (context) => const ExampleClock()),
+            // Navigator.push(
+            //   context,
+            //   ScaleRoute(builder: (context) => const ExampleClock()),
+            // );
+            showScaleDialog(
+              context: context,
+              builder: (BuildContext context) => ExampleClock(),
             );
           },
           child: Padding(

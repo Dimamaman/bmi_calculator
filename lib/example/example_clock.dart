@@ -33,8 +33,8 @@ class _ExampleClockState extends State<ExampleClock> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(backgroundColor: Colors.black),
+      // backgroundColor: Colors.black,
+      appBar: AppBar(),
       body: Center(child: ClockFace(now: _now)),
     );
   }
@@ -55,7 +55,7 @@ class ClockFace extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const size = 280.0;
+    const size = 320.0;
     return SizedBox(
       width: size,
       height: size,
