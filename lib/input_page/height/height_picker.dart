@@ -109,6 +109,7 @@ class _HeightPickerState extends State<HeightPicker> {
 
   Widget _drawLabels() {
     int labelsToDisplay = widget.totalUnits ~/ 5 + 1;
+
     List<Widget> labels = List.generate(labelsToDisplay, (idx) {
       return Text("${widget.maxHeight - 5 * idx}", style: labelsTextStyle);
     });
@@ -139,6 +140,7 @@ class _HeightPickerState extends State<HeightPicker> {
         "images/person.svg",
         height: personImageHeight,
         width: personImageHeight / 3,
+        color: Colors.black,
       ),
     );
   }

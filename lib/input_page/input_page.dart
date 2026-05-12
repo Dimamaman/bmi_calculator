@@ -119,7 +119,7 @@ class InputPageState extends State<InputPage> with TickerProviderStateMixin {
 
   _goToResultPage() async {
     return Navigator.of(context).push(
-      FadeRoute(
+      ScaleRoute(
         builder: (context) =>
             ResultPage(weight: weight, height: height, gender: gender),
       ),

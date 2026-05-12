@@ -1,3 +1,6 @@
+import 'package:bmi_calculator/example/example.dart';
+import 'package:bmi_calculator/example/example_clock.dart';
+import 'package:bmi_calculator/fade_route.dart';
 import 'package:bmi_calculator/input_page/input_page_styles.dart';
 import 'package:bmi_calculator/widget_utils.dart';
 import 'package:flutter/material.dart';
@@ -22,21 +25,52 @@ class BmiAppBar extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[_buildLabel(context), _buildIcon(context)],
+            children: <Widget>[_buildLabel(context), _buildIcons(context)],
           ),
         ),
       ),
     );
   }
 
-  Padding _buildIcon(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: screenAwareSize(11.0, context)),
-      child: SvgPicture.asset(
-        'images/user.svg',
-        height: screenAwareSize(20.0, context),
-        width: screenAwareSize(20.0, context),
-      ),
+  Row _buildIcons(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              ScaleRoute(builder: (context) => const ExampleClock()),
+            );
+          },
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: screenAwareSize(11.0, context),
+              right: screenAwareSize(12.0, context),
+            ),
+            child: Icon(
+              Icons.access_time,
+              size: screenAwareSize(22.0, context),
+            ),
+          ),
+        ),
+        GestureDetector(
+          onDoubleTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ExampleGender()),
+            );
+          },
+          child: Padding(
+            padding: EdgeInsets.only(bottom: screenAwareSize(11.0, context)),
+            child: SvgPicture.asset(
+              'images/user.svg',
+              height: screenAwareSize(20.0, context),
+              width: screenAwareSize(20.0, context),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
