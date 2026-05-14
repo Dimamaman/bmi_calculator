@@ -87,6 +87,64 @@ class _ExampleGenderState extends State<ExampleGender>
                             child: PacmanIcon(),
                           ),
                         ),
+
+                        Positioned(
+                          bottom: 10,
+                          child: Container(
+                            width: 80,
+                            height: 80,
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadiusTween(
+                                    begin: BorderRadius.circular(40),
+                                    end: BorderRadius.zero,
+                                  ).lerp(
+                                    (constraints.maxWidth - 50) > 0
+                                        ? (_pacmanX /
+                                                  (constraints.maxWidth - 50))
+                                              .clamp(0.0, 1.0)
+                                        : 0.0,
+                                  ),
+                              color: Colors.purple,
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 10,
+                          left: 100,
+                          child: Container(
+                            width: 80,
+                            height: 80,
+                            decoration:
+                                DecorationTween(
+                                      begin: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(40),
+                                        color: Colors.blue,
+                                        boxShadow: [],
+                                      ),
+                                      end: BoxDecoration(
+                                        borderRadius: BorderRadius.zero,
+                                        color: Colors.orange,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            blurRadius: 16,
+                                            color: Colors.orange.withValues(
+                                              alpha: 0.6,
+                                            ),
+                                            spreadRadius: 4,
+                                          ),
+                                        ],
+                                      ),
+                                    ).lerp(
+                                      (constraints.maxWidth - 50) > 0
+                                          ? (_pacmanX /
+                                                    (constraints.maxWidth - 50))
+                                                .clamp(0.0, 1.0)
+                                          : 0.0,
+                                    )
+                                    as BoxDecoration,
+                          ),
+                        ),
                       ],
                     ),
                   );
