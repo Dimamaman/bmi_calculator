@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:bmi_calculator/input_page/gender/gender_styles.dart';
+import 'package:bmi_calculator/input_page/pacman_slider.dart';
 import 'package:bmi_calculator/model/gender.dart';
 import 'package:bmi_calculator/widget_utils.dart';
 import 'package:flutter/material.dart';
@@ -11,16 +14,86 @@ class ExampleGender extends StatefulWidget {
   State<ExampleGender> createState() => _ExampleGenderState();
 }
 
-class _ExampleGenderState extends State<ExampleGender> {
+class _ExampleGenderState extends State<ExampleGender>
+    with SingleTickerProviderStateMixin {
   Gender gender = Gender.other;
+  double _pacmanX = 0;
+  late AnimationController _returnController;
+  late Animation<double> _returnAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _returnController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+  }
+
+  @override
+  void dispose() {
+    _returnController.dispose();
+    super.dispose();
+  }
+
+  void _returnToStart() {
+    _returnAnimation =
+        Tween<double>(begin: _pacmanX, end: 0).animate(
+          CurvedAnimation(parent: _returnController, curve: Curves.easeOut),
+        )..addListener(() {
+          setState(() => _pacmanX = _returnAnimation.value);
+        });
+    _returnController.forward(from: 0);
+  }
 
   @override
   Widget build(BuildContext context) {
+    log("JJJJJJ $_pacmanX");
     return Scaffold(
-      body: Center(
-        child: ExampleGenderCard(
-          gender: Gender.other,
-          onChanged: (Gender value) {},
+      body: SafeArea(
+        child: Container(
+          color: Colors.greenAccent,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 10,
+            children: [
+              ExampleGenderCard(
+                gender: Gender.other,
+                onChanged: (Gender value) {},
+              ),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  return Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 18.0),
+                    width: constraints.maxWidth,
+                    height: 160,
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          left: _pacmanX,
+                          child: GestureDetector(
+                            onHorizontalDragUpdate: (details) {
+                              _returnController.stop();
+                              setState(() {
+                                _pacmanX += details.delta.dx;
+                                _pacmanX = _pacmanX.clamp(
+                                  0,
+                                  constraints.maxWidth - 50,
+                                );
+                              });
+                            },
+                            // onHorizontalDragEnd: (_) => _returnToStart(),
+                            child: PacmanIcon(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -23,7 +23,7 @@ class PacmanSlider extends StatefulWidget {
 }
 
 class _PacmanSliderState extends State<PacmanSlider>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   double _pacmanPosition = 24.0;
   late Animation<BorderRadius?> _bordersAnimation;
   late Animation<double> _submitWidthAnimation;
@@ -199,7 +199,7 @@ class AnimatedDots extends StatefulWidget {
 }
 
 class _AnimatedDotsState extends State<AnimatedDots>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   final int numberOfDots = 10;
   final double minOpacity = 0.1;
   final double maxOpacity = 0.5;
@@ -312,6 +312,7 @@ class PacmanIcon extends StatelessWidget {
         'images/pacman.svg',
         height: screenAwareSize(25.0, context),
         width: screenAwareSize(21.0, context),
+        color: Colors.red,
       ),
     );
   }

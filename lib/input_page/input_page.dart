@@ -18,7 +18,7 @@ class InputPage extends StatefulWidget {
   }
 }
 
-class InputPageState extends State<InputPage> with TickerProviderStateMixin {
+class InputPageState extends State<InputPage> with SingleTickerProviderStateMixin {
   late AnimationController _submitAnimationController;
   Gender gender = Gender.other;
   int height = 180;
