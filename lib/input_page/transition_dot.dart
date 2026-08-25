@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:math' as math;
 
 import 'package:bmi_calculator/widget_utils.dart';
@@ -25,6 +26,7 @@ class TransitionDot extends AnimatedWidget {
     double deviceWidth = MediaQuery.of(context).size.width;
     double height = math.min(scaledSize, deviceHeight);
     double width = math.min(scaledSize, deviceWidth);
+
     Decoration decoration = BoxDecoration(
       shape: width < 0.9 * deviceWidth ? BoxShape.circle : BoxShape.rectangle,
       color: Theme.of(context).primaryColor,
@@ -35,18 +37,22 @@ class TransitionDot extends AnimatedWidget {
       width: width,
       height: height,
     );
+    log("JJJJJJJJJJJJ ${(dot as Container).constraints?.maxWidth}");
     return IgnorePointer(
       child: Opacity(
         opacity: positionAnimation.value > 0 ? 1.0 : 0.0,
         child: Scaffold(
           body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Spacer(flex: 104 - positionAnimation.value),
-                dot,
-                Spacer(flex: 4 + positionAnimation.value),
-              ],
+            child: Container(
+              color: Colors.red,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Spacer(flex: 104 - positionAnimation.value),
+                  dot,
+                  Spacer(flex: 4 + positionAnimation.value),
+                ],
+              ),
             ),
           ),
         ),

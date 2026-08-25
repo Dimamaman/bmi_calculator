@@ -4,7 +4,6 @@ import 'package:bmi_calculator/input_page/gender/gender_card.dart';
 import 'package:bmi_calculator/input_page/height/height_card.dart';
 import 'package:bmi_calculator/input_page/input_page_styles.dart';
 import 'package:bmi_calculator/input_page/pacman_slider.dart';
-import 'package:bmi_calculator/input_page/transition_dot.dart';
 import 'package:bmi_calculator/input_page/weight/weight_card.dart';
 import 'package:bmi_calculator/model/gender.dart';
 import 'package:bmi_calculator/result_page/result_page.dart';
@@ -18,7 +17,8 @@ class InputPage extends StatefulWidget {
   }
 }
 
-class InputPageState extends State<InputPage> with SingleTickerProviderStateMixin {
+class InputPageState extends State<InputPage>
+    with SingleTickerProviderStateMixin {
   late AnimationController _submitAnimationController;
   Gender gender = Gender.other;
   int height = 180;
@@ -62,7 +62,7 @@ class InputPageState extends State<InputPage> with SingleTickerProviderStateMixi
             ],
           ),
         ),
-        TransitionDot(animation: _submitAnimationController),
+        // TransitionDot(animation: _submitAnimationController),
       ],
     );
   }
