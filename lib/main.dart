@@ -1,5 +1,4 @@
-import 'package:bmi_calculator/example/premium_card_animation.dart';
-import 'package:bmi_calculator/input_page/input_page.dart';
+import 'package:bmi_calculator/example/insurance.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -29,7 +28,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'BMI Calculator',
       theme: ThemeData(primaryColor: mainBlue, fontFamily: 'SF Pro Display'),
-      home: PremiumCardAnimationPage(),
+      home: InsuranceExample(),
     );
   }
 }
