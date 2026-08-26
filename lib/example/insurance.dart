@@ -63,7 +63,19 @@ class InsuranceExample extends StatefulWidget {
   State<InsuranceExample> createState() => _InsuranceExampleState();
 }
 
-class _InsuranceExampleState extends State<InsuranceExample> {
+class _InsuranceExampleState extends State<InsuranceExample>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController expandedAnimationController;
+
+  @override
+  void initState() {
+    expandedAnimationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 500),
+    );
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -233,26 +245,31 @@ class _InsuranceExampleState extends State<InsuranceExample> {
                                   ),
                                 ),
                               ),
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 28,
-                                  vertical: 14,
-                                ),
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Color(0xFF4A4A4A),
-                                      Color(0xFF2C2C2C),
-                                    ],
+                              GestureDetector(
+                                onTap: () {
+                                  expandedAnimationController.forward();
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 28,
+                                    vertical: 14,
                                   ),
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                child: Text(
-                                  'View Premium',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w600,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Color(0xFF4A4A4A),
+                                        Color(0xFF2C2C2C),
+                                      ],
+                                    ),
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  child: Text(
+                                    'View Premium',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -263,6 +280,23 @@ class _InsuranceExampleState extends State<InsuranceExample> {
                     ),
                     SizedBox(height: 8),
                   ],
+                ),
+              ),
+            ),
+            Positioned(
+              top: 90,
+              right: 10,
+              child: AnimatedScale(
+                scale: expandedAnimationController.value,
+                duration: Duration(milliseconds: 500),
+                child: Container(
+                  width: 55,
+                  height: 55,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
+                  child: Icon(Icons.close, color: Colors.grey),
                 ),
               ),
             ),
