@@ -71,23 +71,120 @@ class _InsuranceExampleState extends State<InsuranceExample>
   void initState() {
     expandedAnimationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 500),
+      duration: Duration(milliseconds: 1500),
     );
     super.initState();
+  }
+
+  Widget _buildPremiumItem(
+    String name,
+    String id,
+    String amount,
+    Color avatarColor,
+  ) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 4),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF5A5A5A), Color(0xFF3A3A3A)],
+          ),
+          borderRadius: BorderRadius.circular(18),
+        ),
+        child: Row(
+          children: [
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                CircleAvatar(
+                  radius: 22,
+                  backgroundColor: avatarColor,
+                  child: Text(
+                    name[0],
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: -2,
+                  right: -2,
+                  child: Container(
+                    width: 18,
+                    height: 18,
+                    decoration: BoxDecoration(
+                      color: Color(0xFFE87A2E),
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Color(0xFF3A3A3A), width: 2),
+                    ),
+                    child: Icon(Icons.check, color: Colors.white, size: 10),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    name,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  SizedBox(height: 2),
+                  Text(
+                    id,
+                    style: TextStyle(color: Color(0xFF9A9A9A), fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
+            Text(
+              amount,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 17,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
+    final collapsedHeight = screenHeight * 0.55;
+    final expandedExtra = 340.0;
     return Scaffold(
-      body: Container(
-        height: screenHeight * 0.55,
-        width: double.infinity,
-        margin: EdgeInsets.only(top: 16, left: 8, right: 8),
-        clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(30)),
-        ),
+      body: AnimatedBuilder(
+        animation: expandedAnimationController,
+        builder: (context, child) {
+          final currentHeight =
+              collapsedHeight +
+              (expandedExtra * expandedAnimationController.value);
+          return Container(
+            height: currentHeight,
+            width: double.infinity,
+            margin: EdgeInsets.only(top: 16, left: 8, right: 8),
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(30)),
+            ),
+            child: child,
+          );
+        },
         child: Stack(
           children: [
             Positioned.fill(
@@ -116,69 +213,104 @@ class _InsuranceExampleState extends State<InsuranceExample>
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    Spacer(),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.75),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 54,
-                            height: 54,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [Color(0xFFE8B87A), Color(0xFFD4935A)],
+                    AnimatedBuilder(
+                      animation: expandedAnimationController,
+                      builder: (context, _) {
+                        final curvedT = Curves.easeInOut.transform(
+                          expandedAnimationController.value,
+                        );
+                        return SizedBox(height: (1 - curvedT) * 20);
+                      },
+                    ),
+                    AnimatedBuilder(
+                      animation: expandedAnimationController,
+                      builder: (context, child) {
+                        final curvedT = Curves.easeInOut.transform(
+                          expandedAnimationController.value,
+                        );
+                        final claimsOpacity = (1.0 - curvedT * 2.5).clamp(0.0, 1.0);
+                        return SizedBox(
+                          height: (1 - curvedT) * 70,
+                          child: Opacity(
+                            opacity: claimsOpacity,
+                            child: child,
+                          ),
+                        );
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.75),
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 54,
+                              height: 54,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [Color(0xFFE8B87A), Color(0xFFD4935A)],
+                                ),
                               ),
-                            ),
-                            child: Center(
-                              child: Text(
-                                '2',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700,
+                              child: Center(
+                                child: Text(
+                                  '2',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              'You have 2 claims in progress',
-                              style: TextStyle(
-                                color: Color(0xFF2C2C2C),
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
+                            SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                'You have 2 claims in progress',
+                                style: TextStyle(
+                                  color: Color(0xFF2C2C2C),
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
-                          ),
-                          Icon(
-                            Icons.chevron_right,
-                            color: Color(0xFF888888),
-                            size: 24,
-                          ),
-                          SizedBox(width: 8),
-                        ],
+                            Icon(
+                              Icons.chevron_right,
+                              color: Color(0xFF888888),
+                              size: 24,
+                            ),
+                            SizedBox(width: 8),
+                          ],
+                        ),
                       ),
                     ),
-                    SizedBox(height: 8),
-                    Container(
-                      // width: double.infinity,
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Color(0xFFF5F2EF),
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                    AnimatedBuilder(
+                      animation: expandedAnimationController,
+                      builder: (context, _) {
+                        final curvedT = Curves.easeInOut.transform(
+                          expandedAnimationController.value,
+                        );
+                        return SizedBox(height: (1 - curvedT) * 8);
+                      },
+                    ),
+                    Expanded(
+                      child: Container(
+                        // width: double.infinity,
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Color(0xFFF5F2EF),
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                      child: SingleChildScrollView(
+                        physics: NeverScrollableScrollPhysics(),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
                                 padding: const EdgeInsets.only(left: 8.0),
@@ -230,53 +362,255 @@ class _InsuranceExampleState extends State<InsuranceExample>
                               ),
                             ],
                           ),
-                          SizedBox(height: 24),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  '\$2,322.98',
-                                  style: TextStyle(
-                                    color: Color(0xFF1C1C1E),
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  expandedAnimationController.forward();
+                          SizedBox(height: 16),
+                          LayoutBuilder(
+                            builder: (context, constraints) {
+                              return AnimatedBuilder(
+                                animation: expandedAnimationController,
+                                builder: (context, _) {
+                                  final t = expandedAnimationController.value;
+                                  final curvedT = Curves.easeInOut.transform(t);
+                                  final maxW = constraints.maxWidth;
+                                  final buttonW = 160.0;
+                                  final currentW = ui.lerpDouble(
+                                    buttonW,
+                                    maxW,
+                                    curvedT,
+                                  )!;
+
+                                  final textOpacity = (1.0 - curvedT * 3).clamp(
+                                    0.0,
+                                    1.0,
+                                  );
+
+                                  double itemSlide(double start, double end) {
+                                    final itemT = ((t - start) / (end - start))
+                                        .clamp(0.0, 1.0);
+                                    return Curves.easeOut.transform(itemT);
+                                  }
+
+                                  final item1T = itemSlide(0.2, 0.6);
+                                  final item2T = itemSlide(0.3, 0.7);
+                                  final item3T = itemSlide(0.4, 0.8);
+                                  final payT = itemSlide(0.5, 0.9);
+
+                                  return Column(
+                                    children: [
+                                      // $2,322.98 — yopilganda ko'rinadi
+                                      SizedBox(
+                                        height: (1 - curvedT) * 40,
+                                        child: Opacity(
+                                          opacity: textOpacity,
+                                          child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Padding(
+                                              padding: EdgeInsets.only(left: 8),
+                                              child: Text(
+                                                '\$2,322.98',
+                                                style: TextStyle(
+                                                  color: Color(0xFF1C1C1E),
+                                                  fontSize: 24,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      // Yoyiladigan to'q container
+                                      GestureDetector(
+                                        onTap: () {
+                                          if (expandedAnimationController
+                                              .isCompleted) {
+                                            expandedAnimationController
+                                                .reverse();
+                                          } else {
+                                            expandedAnimationController
+                                                .forward();
+                                          }
+                                        },
+                                        child: Align(
+                                          alignment: Alignment.lerp(
+                                            Alignment.centerRight,
+                                            Alignment.center,
+                                            curvedT,
+                                          )!,
+                                          child: Container(
+                                            width: currentW,
+                                            height: ui.lerpDouble(
+                                              46,
+                                              380,
+                                              curvedT,
+                                            ),
+                                            clipBehavior: Clip.antiAlias,
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: ui.lerpDouble(
+                                                28,
+                                                10,
+                                                curvedT,
+                                              )!,
+                                              vertical: 14,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                begin: Alignment.topLeft,
+                                                end: Alignment.bottomRight,
+                                                colors: [
+                                                  Color(0xFF4A4A4A),
+                                                  Color(0xFF2C2C2C),
+                                                ],
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                    ui.lerpDouble(
+                                                      40,
+                                                      40,
+                                                      curvedT,
+                                                    )!,
+                                                  ),
+                                            ),
+                                            child: SingleChildScrollView(
+                                              physics:
+                                                  NeverScrollableScrollPhysics(),
+                                              child: SizedBox(
+                                                width: maxW - 20,
+                                                child: Column(
+                                                  children: [
+                                                    Opacity(
+                                                      opacity: textOpacity,
+                                                      child: Center(
+                                                        child: Text(
+                                                          'View Premium',
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 15,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 8),
+                                                    Transform.translate(
+                                                      offset: Offset(
+                                                        (1 - item1T) * maxW,
+                                                        0,
+                                                      ),
+                                                      child: Opacity(
+                                                        opacity: item1T,
+                                                        child:
+                                                            _buildPremiumItem(
+                                                              'Willie Schulist',
+                                                              'HI1418872904-BB',
+                                                              '\$1,232.98',
+                                                              Color(0xFF7B6B8A),
+                                                            ),
+                                                      ),
+                                                    ),
+                                                    Transform.translate(
+                                                      offset: Offset(
+                                                        (1 - item2T) * maxW,
+                                                        0,
+                                                      ),
+                                                      child: Opacity(
+                                                        opacity: item2T,
+                                                        child:
+                                                            _buildPremiumItem(
+                                                              'Anne Marquardt',
+                                                              'HI1418872904-BB',
+                                                              '\$1,232.98',
+                                                              Color(0xFF8A7B6B),
+                                                            ),
+                                                      ),
+                                                    ),
+                                                    Transform.translate(
+                                                      offset: Offset(
+                                                        (1 - item3T) * maxW,
+                                                        0,
+                                                      ),
+                                                      child: Opacity(
+                                                        opacity: item3T,
+                                                        child:
+                                                            _buildPremiumItem(
+                                                              'Kristine Gibson',
+                                                              'HI1418872904-BB',
+                                                              '\$1,232.98',
+                                                              Color(0xFF6B7B8A),
+                                                            ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 8),
+                                                    Transform.translate(
+                                                      offset: Offset(
+                                                        0,
+                                                        (1 - payT) * 30,
+                                                      ),
+                                                      child: Opacity(
+                                                        opacity: payT,
+                                                        child: Row(
+                                                          children: [
+                                                            Container(
+                                                              padding:
+                                                                  EdgeInsets.symmetric(
+                                                                    horizontal:
+                                                                        24,
+                                                                    vertical:
+                                                                        12,
+                                                                  ),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          30,
+                                                                        ),
+                                                                  ),
+                                                              child: Text(
+                                                                'Pay Now',
+                                                                style: TextStyle(
+                                                                  color: Color(
+                                                                    0xFF1C1C1E,
+                                                                  ),
+                                                                  fontSize: 15,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Spacer(),
+                                                            Text(
+                                                              'Slide to Confirm Payment',
+                                                              style: TextStyle(
+                                                                color: Color(
+                                                                  0xFF8E8E93,
+                                                                ),
+                                                                fontSize: 13,
+                                                              ),
+                                                            ),
+                                                            SizedBox(width: 8),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  );
                                 },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 28,
-                                    vertical: 14,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        Color(0xFF4A4A4A),
-                                        Color(0xFF2C2C2C),
-                                      ],
-                                    ),
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  child: Text(
-                                    'View Premium',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                              );
+                            },
                           ),
-                        ],
+                          ],
+                        ),
                       ),
+                    ),
                     ),
                     SizedBox(height: 8),
                   ],
