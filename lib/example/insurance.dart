@@ -2,60 +2,6 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
-class _MeshGradientPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final rect = Offset.zero & size;
-
-    // 1-qatlam: asosiy fon — yuqoridan pastga iliq gradient
-    final basePaint = Paint()
-      ..shader = ui.Gradient.linear(
-        Offset(0, 0),
-        Offset(size.width, size.height),
-        [
-          Color(0xFFD5BFB0), // och beige-kulrang
-          Color(0xFFE09068), // shaftoli
-          Color(0xFFC85530), // to'q apelsin
-        ],
-        [0.0, 0.45, 1.0],
-      );
-    canvas.drawRect(rect, basePaint);
-
-    // 2-qatlam: yuqori-chap kulrang-kumush dog'
-    final topLeftPaint = Paint()
-      ..shader = ui.Gradient.radial(
-        Offset(size.width * 0.15, size.height * 0.1),
-        size.width * 0.55,
-        [Color(0xFFBBB0A5), Color(0x88C0B5AA), Color(0x00C0B5AA)],
-        [0.0, 0.35, 1.0],
-      );
-    canvas.drawRect(rect, topLeftPaint);
-
-    // 3-qatlam: o'ng pastdagi to'q apelsin dog'
-    final bottomRightPaint = Paint()
-      ..shader = ui.Gradient.radial(
-        Offset(size.width * 0.75, size.height * 0.7),
-        size.width * 0.6,
-        [Color(0xFFB84820), Color(0xAAC85530), Color(0x00C85530)],
-        [0.0, 0.3, 1.0],
-      );
-    canvas.drawRect(rect, bottomRightPaint);
-
-    // 4-qatlam: markaziy shaftoli aksent
-    final centerPaint = Paint()
-      ..shader = ui.Gradient.radial(
-        Offset(size.width * 0.45, size.height * 0.45),
-        size.width * 0.4,
-        [Color(0x66E89565), Color(0x00E89565)],
-        [0.0, 1.0],
-      );
-    canvas.drawRect(rect, centerPaint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
-
 class InsuranceExample extends StatefulWidget {
   const InsuranceExample();
 
@@ -71,7 +17,7 @@ class _InsuranceExampleState extends State<InsuranceExample>
   void initState() {
     expandedAnimationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1500),
+      duration: Duration(milliseconds: 500),
     );
     super.initState();
   }
@@ -226,6 +172,7 @@ class _InsuranceExampleState extends State<InsuranceExample>
                         return SizedBox(height: (1 - curvedT) * 20);
                       },
                     ),
+                    SizedBox(height: 18),
                     AnimatedBuilder(
                       animation: expandedAnimationController,
                       builder: (context, child) {
@@ -458,7 +405,7 @@ class _InsuranceExampleState extends State<InsuranceExample>
                                               width: currentW,
                                               height: ui.lerpDouble(
                                                 46,
-                                                380,
+                                                320,
                                                 curvedT,
                                               ),
                                               clipBehavior: Clip.antiAlias,
@@ -485,7 +432,11 @@ class _InsuranceExampleState extends State<InsuranceExample>
                                                       10,
                                                       curvedT,
                                                     )!,
-                                                    vertical: 14,
+                                                    vertical: ui.lerpDouble(
+                                                      12,
+                                                      4,
+                                                      curvedT,
+                                                    )!,
                                                   ),
                                                   child: Column(
                                                     children: [
@@ -506,7 +457,6 @@ class _InsuranceExampleState extends State<InsuranceExample>
                                                         ),
                                                       ),
                                                       if (t > 0) ...[
-                                                        SizedBox(height: 8),
                                                         Transform.translate(
                                                           offset: Offset(
                                                             (1 - item1T) * maxW,
@@ -649,8 +599,8 @@ class _InsuranceExampleState extends State<InsuranceExample>
                     expandedAnimationController.reverse();
                   },
                   child: Container(
-                    width: 55,
-                    height: 55,
+                    width: 50,
+                    height: 50,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white,
@@ -665,4 +615,58 @@ class _InsuranceExampleState extends State<InsuranceExample>
       ),
     );
   }
+}
+
+class _MeshGradientPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Offset.zero & size;
+
+    // 1-qatlam: asosiy fon — yuqoridan pastga iliq gradient
+    final basePaint = Paint()
+      ..shader = ui.Gradient.linear(
+        Offset(0, 0),
+        Offset(size.width, size.height),
+        [
+          Color(0xFFD5BFB0), // och beige-kulrang
+          Color(0xFFE09068), // shaftoli
+          Color(0xFFC85530), // to'q apelsin
+        ],
+        [0.0, 0.45, 1.0],
+      );
+    canvas.drawRect(rect, basePaint);
+
+    // 2-qatlam: yuqori-chap kulrang-kumush dog'
+    final topLeftPaint = Paint()
+      ..shader = ui.Gradient.radial(
+        Offset(size.width * 0.15, size.height * 0.1),
+        size.width * 0.55,
+        [Color(0xFFBBB0A5), Color(0x88C0B5AA), Color(0x00C0B5AA)],
+        [0.0, 0.35, 1.0],
+      );
+    canvas.drawRect(rect, topLeftPaint);
+
+    // 3-qatlam: o'ng pastdagi to'q apelsin dog'
+    final bottomRightPaint = Paint()
+      ..shader = ui.Gradient.radial(
+        Offset(size.width * 0.75, size.height * 0.7),
+        size.width * 0.6,
+        [Color(0xFFB84820), Color(0xAAC85530), Color(0x00C85530)],
+        [0.0, 0.3, 1.0],
+      );
+    canvas.drawRect(rect, bottomRightPaint);
+
+    // 4-qatlam: markaziy shaftoli aksent
+    final centerPaint = Paint()
+      ..shader = ui.Gradient.radial(
+        Offset(size.width * 0.45, size.height * 0.45),
+        size.width * 0.4,
+        [Color(0x66E89565), Color(0x00E89565)],
+        [0.0, 1.0],
+      );
+    canvas.drawRect(rect, centerPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
