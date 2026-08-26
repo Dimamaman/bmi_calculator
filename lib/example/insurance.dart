@@ -286,17 +286,27 @@ class _InsuranceExampleState extends State<InsuranceExample>
             Positioned(
               top: 90,
               right: 10,
-              child: AnimatedScale(
-                scale: expandedAnimationController.value,
-                duration: Duration(milliseconds: 500),
-                child: Container(
-                  width: 55,
-                  height: 55,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white,
+              child: AnimatedBuilder(
+                animation: expandedAnimationController,
+                builder: (context, child) {
+                  return Transform.scale(
+                    scale: expandedAnimationController.value,
+                    child: child,
+                  );
+                },
+                child: GestureDetector(
+                  onTap: () {
+                    expandedAnimationController.reverse();
+                  },
+                  child: Container(
+                    width: 55,
+                    height: 55,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
+                    ),
+                    child: Icon(Icons.close, color: Colors.grey),
                   ),
-                  child: Icon(Icons.close, color: Colors.grey),
                 ),
               ),
             ),
