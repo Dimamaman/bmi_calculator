@@ -360,31 +360,33 @@ class _InsuranceExampleState extends State<InsuranceExample>
 
                                     return Column(
                                       children: [
-                                        // $2,322.98 — yopilganda ko'rinadi
-                                        SizedBox(
-                                          height: (1 - curvedT) * 40,
-                                          child: Opacity(
-                                            opacity: textOpacity,
-                                            child: Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Padding(
-                                                padding: EdgeInsets.only(
-                                                  left: 8,
-                                                ),
-                                                child: Text(
-                                                  '\$2,322.98',
-                                                  style: TextStyle(
-                                                    color: Color(0xFF1C1C1E),
-                                                    fontSize: 24,
-                                                    fontWeight: FontWeight.w700,
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: ClipRect(
+                                                child: SizedBox(
+                                                  height: ui.lerpDouble(40, 0, curvedT),
+                                                  child: Opacity(
+                                                    opacity: textOpacity,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(left: 8),
+                                                      child: Align(
+                                                        alignment: Alignment.centerLeft,
+                                                        child: Text(
+                                                          '\$2,322.98',
+                                                          style: TextStyle(
+                                                            color: Color(0xFF1C1C1E),
+                                                            fontSize: 24,
+                                                            fontWeight: FontWeight.w700,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ),
-                                        // Yoyiladigan to'q container
-                                        GestureDetector(
+                                            GestureDetector(
                                           onTap: () {
                                             if (expandedAnimationController
                                                 .isCompleted) {
@@ -567,6 +569,8 @@ class _InsuranceExampleState extends State<InsuranceExample>
                                               ),
                                             ),
                                           ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     );
