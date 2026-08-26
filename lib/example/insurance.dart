@@ -86,6 +86,7 @@ class _InsuranceExampleState extends State<InsuranceExample>
       padding: EdgeInsets.symmetric(vertical: 4),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -148,12 +149,15 @@ class _InsuranceExampleState extends State<InsuranceExample>
                 ],
               ),
             ),
-            Text(
-              amount,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 17,
-                fontWeight: FontWeight.w700,
+            Flexible(
+              child: Text(
+                amount,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 17,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
           ],
@@ -166,7 +170,7 @@ class _InsuranceExampleState extends State<InsuranceExample>
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final collapsedHeight = screenHeight * 0.55;
-    final expandedExtra = 340.0;
+    final expandedExtra = 195.0;
     return Scaffold(
       body: AnimatedBuilder(
         animation: expandedAnimationController,
@@ -175,9 +179,8 @@ class _InsuranceExampleState extends State<InsuranceExample>
               collapsedHeight +
               (expandedExtra * expandedAnimationController.value);
           return Container(
-            height: currentHeight,
+            height: screenHeight,
             width: double.infinity,
-            margin: EdgeInsets.only(top: 16, left: 8, right: 8),
             clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -192,7 +195,8 @@ class _InsuranceExampleState extends State<InsuranceExample>
             ),
             Padding(
               padding: EdgeInsets.only(top: 60, left: 8, right: 8),
-              child: Center(
+              child: SingleChildScrollView(
+                physics: NeverScrollableScrollPhysics(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -228,17 +232,25 @@ class _InsuranceExampleState extends State<InsuranceExample>
                         final curvedT = Curves.easeInOut.transform(
                           expandedAnimationController.value,
                         );
-                        final claimsOpacity = (1.0 - curvedT * 2.5).clamp(0.0, 1.0);
-                        return SizedBox(
-                          height: (1 - curvedT) * 70,
-                          child: Opacity(
-                            opacity: claimsOpacity,
-                            child: child,
+                        final claimsOpacity = (1.0 - curvedT * 2.5).clamp(
+                          0.0,
+                          1.0,
+                        );
+                        return ClipRect(
+                          child: SizedBox(
+                            height: (1 - curvedT) * 70,
+                            child: Opacity(
+                              opacity: claimsOpacity,
+                              child: child,
+                            ),
                           ),
                         );
                       },
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.75),
                           borderRadius: BorderRadius.circular(30),
@@ -253,7 +265,10 @@ class _InsuranceExampleState extends State<InsuranceExample>
                                 gradient: LinearGradient(
                                   begin: Alignment.topCenter,
                                   end: Alignment.bottomCenter,
-                                  colors: [Color(0xFFE8B87A), Color(0xFFD4935A)],
+                                  colors: [
+                                    Color(0xFFE8B87A),
+                                    Color(0xFFD4935A),
+                                  ],
                                 ),
                               ),
                               child: Center(
@@ -296,14 +311,13 @@ class _InsuranceExampleState extends State<InsuranceExample>
                         return SizedBox(height: (1 - curvedT) * 8);
                       },
                     ),
-                    Expanded(
-                      child: Container(
-                        // width: double.infinity,
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Color(0xFFF5F2EF),
-                          borderRadius: BorderRadius.circular(24),
-                        ),
+                    Container(
+                      // width: double.infinity,
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Color(0xFFF5F2EF),
+                        borderRadius: BorderRadius.circular(24),
+                      ),
                       child: SingleChildScrollView(
                         physics: NeverScrollableScrollPhysics(),
                         child: Column(
@@ -311,254 +325,252 @@ class _InsuranceExampleState extends State<InsuranceExample>
                           children: [
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        '3 Upcoming Premiums',
-                                        style: TextStyle(
-                                          color: Color(0xFF1C1C1E),
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.w700,
+                              children: [
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '3 Upcoming Premiums',
+                                          style: TextStyle(
+                                            color: Color(0xFF1C1C1E),
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.w700,
+                                          ),
                                         ),
-                                      ),
-                                      SizedBox(height: 8),
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            Icons.access_time,
-                                            color: Color(0xFF8E8E93),
-                                            size: 18,
-                                          ),
-                                          SizedBox(width: 6),
-                                          Text(
-                                            'Due in 27 days',
-                                            style: TextStyle(
+                                        SizedBox(height: 8),
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.access_time,
                                               color: Color(0xFF8E8E93),
-                                              fontSize: 15,
+                                              size: 18,
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                            SizedBox(width: 6),
+                                            Text(
+                                              'Due in 27 days',
+                                              style: TextStyle(
+                                                color: Color(0xFF8E8E93),
+                                                fontSize: 15,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Transform.flip(
-                                flipX: true,
-                                child: Transform.translate(
-                                  offset: Offset(0, -9),
-                                  child: Image.asset(
-                                    'images/receipt.webp',
-                                    width: 102,
-                                    height: 102,
+                                Transform.flip(
+                                  flipX: true,
+                                  child: Transform.translate(
+                                    offset: Offset(0, -9),
+                                    child: Image.asset(
+                                      'images/receipt.webp',
+                                      width: 102,
+                                      height: 102,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 16),
-                          LayoutBuilder(
-                            builder: (context, constraints) {
-                              return AnimatedBuilder(
-                                animation: expandedAnimationController,
-                                builder: (context, _) {
-                                  final t = expandedAnimationController.value;
-                                  final curvedT = Curves.easeInOut.transform(t);
-                                  final maxW = constraints.maxWidth;
-                                  final buttonW = 160.0;
-                                  final currentW = ui.lerpDouble(
-                                    buttonW,
-                                    maxW,
-                                    curvedT,
-                                  )!;
+                              ],
+                            ),
+                            SizedBox(height: 16),
+                            LayoutBuilder(
+                              builder: (context, constraints) {
+                                return AnimatedBuilder(
+                                  animation: expandedAnimationController,
+                                  builder: (context, _) {
+                                    final t = expandedAnimationController.value;
+                                    final curvedT = Curves.easeInOut.transform(
+                                      t,
+                                    );
+                                    final maxW = constraints.maxWidth;
+                                    final buttonW = 160.0;
+                                    final currentW = ui.lerpDouble(
+                                      buttonW,
+                                      maxW,
+                                      curvedT,
+                                    )!;
 
-                                  final textOpacity = (1.0 - curvedT * 3).clamp(
-                                    0.0,
-                                    1.0,
-                                  );
-
-                                  double itemSlide(double start, double end) {
-                                    final itemT = ((t - start) / (end - start))
+                                    final textOpacity = (1.0 - curvedT * 3)
                                         .clamp(0.0, 1.0);
-                                    return Curves.easeOut.transform(itemT);
-                                  }
 
-                                  final item1T = itemSlide(0.2, 0.6);
-                                  final item2T = itemSlide(0.3, 0.7);
-                                  final item3T = itemSlide(0.4, 0.8);
-                                  final payT = itemSlide(0.5, 0.9);
+                                    double itemSlide(double start, double end) {
+                                      final itemT =
+                                          ((t - start) / (end - start)).clamp(
+                                            0.0,
+                                            1.0,
+                                          );
+                                      return Curves.easeOut.transform(itemT);
+                                    }
 
-                                  return Column(
-                                    children: [
-                                      // $2,322.98 — yopilganda ko'rinadi
-                                      SizedBox(
-                                        height: (1 - curvedT) * 40,
-                                        child: Opacity(
-                                          opacity: textOpacity,
-                                          child: Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Padding(
-                                              padding: EdgeInsets.only(left: 8),
-                                              child: Text(
-                                                '\$2,322.98',
-                                                style: TextStyle(
-                                                  color: Color(0xFF1C1C1E),
-                                                  fontSize: 24,
-                                                  fontWeight: FontWeight.w700,
+                                    final item1T = itemSlide(0.2, 0.6);
+                                    final item2T = itemSlide(0.3, 0.7);
+                                    final item3T = itemSlide(0.4, 0.8);
+                                    final payT = itemSlide(0.5, 0.9);
+
+                                    return Column(
+                                      children: [
+                                        // $2,322.98 — yopilganda ko'rinadi
+                                        SizedBox(
+                                          height: (1 - curvedT) * 40,
+                                          child: Opacity(
+                                            opacity: textOpacity,
+                                            child: Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Padding(
+                                                padding: EdgeInsets.only(
+                                                  left: 8,
+                                                ),
+                                                child: Text(
+                                                  '\$2,322.98',
+                                                  style: TextStyle(
+                                                    color: Color(0xFF1C1C1E),
+                                                    fontSize: 24,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      // Yoyiladigan to'q container
-                                      GestureDetector(
-                                        onTap: () {
-                                          if (expandedAnimationController
-                                              .isCompleted) {
-                                            expandedAnimationController
-                                                .reverse();
-                                          } else {
-                                            expandedAnimationController
-                                                .forward();
-                                          }
-                                        },
-                                        child: Align(
-                                          alignment: Alignment.lerp(
-                                            Alignment.centerRight,
-                                            Alignment.center,
-                                            curvedT,
-                                          )!,
-                                          child: Container(
-                                            width: currentW,
-                                            height: ui.lerpDouble(
-                                              46,
-                                              380,
+                                        // Yoyiladigan to'q container
+                                        GestureDetector(
+                                          onTap: () {
+                                            if (expandedAnimationController
+                                                .isCompleted) {
+                                              expandedAnimationController
+                                                  .reverse();
+                                            } else {
+                                              expandedAnimationController
+                                                  .forward();
+                                            }
+                                          },
+                                          child: Align(
+                                            alignment: Alignment.lerp(
+                                              Alignment.centerRight,
+                                              Alignment.center,
                                               curvedT,
-                                            ),
-                                            clipBehavior: Clip.antiAlias,
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: ui.lerpDouble(
-                                                28,
-                                                10,
+                                            )!,
+                                            child: Container(
+                                              width: currentW,
+                                              height: ui.lerpDouble(
+                                                46,
+                                                380,
                                                 curvedT,
-                                              )!,
-                                              vertical: 14,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              gradient: LinearGradient(
-                                                begin: Alignment.topLeft,
-                                                end: Alignment.bottomRight,
-                                                colors: [
-                                                  Color(0xFF4A4A4A),
-                                                  Color(0xFF2C2C2C),
-                                                ],
                                               ),
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                    ui.lerpDouble(
-                                                      40,
-                                                      40,
+                                              clipBehavior: Clip.antiAlias,
+                                              decoration: BoxDecoration(
+                                                gradient: LinearGradient(
+                                                  begin: Alignment.topLeft,
+                                                  end: Alignment.bottomRight,
+                                                  colors: [
+                                                    Color(0xFF4A4A4A),
+                                                    Color(0xFF2C2C2C),
+                                                  ],
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(40),
+                                              ),
+                                              child: OverflowBox(
+                                                maxWidth: maxW,
+                                                maxHeight: 400,
+                                                alignment: Alignment.topCenter,
+                                                child: Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal: ui.lerpDouble(
+                                                      28,
+                                                      10,
                                                       curvedT,
                                                     )!,
+                                                    vertical: 14,
                                                   ),
-                                            ),
-                                            child: SingleChildScrollView(
-                                              physics:
-                                                  NeverScrollableScrollPhysics(),
-                                              child: SizedBox(
-                                                width: maxW - 20,
-                                                child: Column(
-                                                  children: [
-                                                    Opacity(
-                                                      opacity: textOpacity,
-                                                      child: Center(
-                                                        child: Text(
-                                                          'View Premium',
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 15,
-                                                            fontWeight:
-                                                                FontWeight.w600,
+                                                  child: Column(
+                                                    children: [
+                                                      Opacity(
+                                                        opacity: textOpacity,
+                                                        child: Center(
+                                                          child: Text(
+                                                            'View Premium',
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 15,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                                    SizedBox(height: 8),
-                                                    Transform.translate(
-                                                      offset: Offset(
-                                                        (1 - item1T) * maxW,
-                                                        0,
-                                                      ),
-                                                      child: Opacity(
-                                                        opacity: item1T,
-                                                        child:
-                                                            _buildPremiumItem(
+                                                      if (t > 0) ...[
+                                                        SizedBox(height: 8),
+                                                        Transform.translate(
+                                                          offset: Offset(
+                                                            (1 - item1T) * maxW,
+                                                            0,
+                                                          ),
+                                                          child: Opacity(
+                                                            opacity: item1T,
+                                                            child: _buildPremiumItem(
                                                               'Willie Schulist',
                                                               'HI1418872904-BB',
                                                               '\$1,232.98',
                                                               Color(0xFF7B6B8A),
                                                             ),
-                                                      ),
-                                                    ),
-                                                    Transform.translate(
-                                                      offset: Offset(
-                                                        (1 - item2T) * maxW,
-                                                        0,
-                                                      ),
-                                                      child: Opacity(
-                                                        opacity: item2T,
-                                                        child:
-                                                            _buildPremiumItem(
+                                                          ),
+                                                        ),
+                                                        Transform.translate(
+                                                          offset: Offset(
+                                                            (1 - item2T) * maxW,
+                                                            0,
+                                                          ),
+                                                          child: Opacity(
+                                                            opacity: item2T,
+                                                            child: _buildPremiumItem(
                                                               'Anne Marquardt',
                                                               'HI1418872904-BB',
                                                               '\$1,232.98',
                                                               Color(0xFF8A7B6B),
                                                             ),
-                                                      ),
-                                                    ),
-                                                    Transform.translate(
-                                                      offset: Offset(
-                                                        (1 - item3T) * maxW,
-                                                        0,
-                                                      ),
-                                                      child: Opacity(
-                                                        opacity: item3T,
-                                                        child:
-                                                            _buildPremiumItem(
+                                                          ),
+                                                        ),
+                                                        Transform.translate(
+                                                          offset: Offset(
+                                                            (1 - item3T) * maxW,
+                                                            0,
+                                                          ),
+                                                          child: Opacity(
+                                                            opacity: item3T,
+                                                            child: _buildPremiumItem(
                                                               'Kristine Gibson',
                                                               'HI1418872904-BB',
                                                               '\$1,232.98',
                                                               Color(0xFF6B7B8A),
                                                             ),
-                                                      ),
-                                                    ),
-                                                    SizedBox(height: 8),
-                                                    Transform.translate(
-                                                      offset: Offset(
-                                                        0,
-                                                        (1 - payT) * 30,
-                                                      ),
-                                                      child: Opacity(
-                                                        opacity: payT,
-                                                        child: Row(
-                                                          children: [
-                                                            Container(
-                                                              padding:
-                                                                  EdgeInsets.symmetric(
-                                                                    horizontal:
-                                                                        24,
-                                                                    vertical:
-                                                                        12,
-                                                                  ),
-                                                              decoration:
-                                                                  BoxDecoration(
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 8),
+                                                        Transform.translate(
+                                                          offset: Offset(
+                                                            0,
+                                                            (1 - payT) * 30,
+                                                          ),
+                                                          child: Opacity(
+                                                            opacity: payT,
+                                                            child: Row(
+                                                              children: [
+                                                                Container(
+                                                                  padding:
+                                                                      EdgeInsets.symmetric(
+                                                                        horizontal:
+                                                                            24,
+                                                                        vertical:
+                                                                            12,
+                                                                      ),
+                                                                  decoration: BoxDecoration(
                                                                     color: Colors
                                                                         .white,
                                                                     borderRadius:
@@ -566,51 +578,55 @@ class _InsuranceExampleState extends State<InsuranceExample>
                                                                           30,
                                                                         ),
                                                                   ),
-                                                              child: Text(
-                                                                'Pay Now',
-                                                                style: TextStyle(
-                                                                  color: Color(
-                                                                    0xFF1C1C1E,
+                                                                  child: Text(
+                                                                    'Pay Now',
+                                                                    style: TextStyle(
+                                                                      color: Color(
+                                                                        0xFF1C1C1E,
+                                                                      ),
+                                                                      fontSize:
+                                                                          15,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                    ),
                                                                   ),
-                                                                  fontSize: 15,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
                                                                 ),
-                                                              ),
-                                                            ),
-                                                            Spacer(),
-                                                            Text(
-                                                              'Slide to Confirm Payment',
-                                                              style: TextStyle(
-                                                                color: Color(
-                                                                  0xFF8E8E93,
+                                                                Spacer(),
+                                                                Text(
+                                                                  'Slide to Confirm Payment',
+                                                                  style: TextStyle(
+                                                                    color: Color(
+                                                                      0xFF8E8E93,
+                                                                    ),
+                                                                    fontSize:
+                                                                        13,
+                                                                  ),
                                                                 ),
-                                                                fontSize: 13,
-                                                              ),
+                                                                SizedBox(
+                                                                  width: 8,
+                                                                ),
+                                                              ],
                                                             ),
-                                                            SizedBox(width: 8),
-                                                          ],
+                                                          ),
                                                         ),
-                                                      ),
-                                                    ),
-                                                  ],
+                                                      ],
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                          ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                            ),
                           ],
                         ),
                       ),
-                    ),
                     ),
                     SizedBox(height: 8),
                   ],
