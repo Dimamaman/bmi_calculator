@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -75,6 +76,8 @@ class _InsuranceExampleState extends State<InsuranceExample>
                     _UpcomingPremiumsCard(
                       controller: expandedAnimationController,
                     ),
+                    SizedBox(height: 16),
+                    _ServicesSection(),
                     SizedBox(height: 8),
                   ],
                 ),
@@ -242,10 +245,7 @@ class _PremiumsHeader extends StatelessWidget {
                     SizedBox(width: 6),
                     Text(
                       'Due in 27 days',
-                      style: TextStyle(
-                        color: Color(0xFF8E8E93),
-                        fontSize: 15,
-                      ),
+                      style: TextStyle(color: Color(0xFF8E8E93), fontSize: 15),
                     ),
                   ],
                 ),
@@ -283,6 +283,7 @@ class _ExpandablePremiumSection extends StatelessWidget {
             final buttonW = 160.0;
             final currentW = ui.lerpDouble(buttonW, maxW, curvedT)!;
             final textOpacity = (1.0 - curvedT * 3).clamp(0.0, 1.0);
+            log("NNNNNN  $currentW ~~~~~~ $textOpacity");
 
             double itemSlide(double start, double end) {
               final itemT = ((t - start) / (end - start)).clamp(0.0, 1.0);
@@ -399,10 +400,7 @@ class _ExpandablePremiumSection extends StatelessWidget {
 }
 
 class _AnimatedPriceLabel extends StatelessWidget {
-  const _AnimatedPriceLabel({
-    required this.curvedT,
-    required this.textOpacity,
-  });
+  const _AnimatedPriceLabel({required this.curvedT, required this.textOpacity});
 
   final double curvedT;
   final double textOpacity;
@@ -604,6 +602,95 @@ class _PayNowRow extends StatelessWidget {
               style: TextStyle(color: Color(0xFF8E8E93), fontSize: 13),
             ),
             SizedBox(width: 8),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ServicesSection extends StatelessWidget {
+  const _ServicesSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Color(0xFFF5F2EF),
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Services',
+            style: TextStyle(
+              color: Color(0xFF1C1C1E),
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          SizedBox(height: 16),
+          Row(
+            children: [
+              _ServiceItem(icon: Icons.payment, label: 'Payment'),
+              SizedBox(width: 10),
+              _ServiceItem(icon: Icons.download_rounded, label: 'Statement Download'),
+            ],
+          ),
+          SizedBox(height: 10),
+          Row(
+            children: [
+              _ServiceItem(icon: Icons.chat_bubble_outline, label: 'Chat with Us'),
+              SizedBox(width: 10),
+              _ServiceItem(icon: Icons.star_outline, label: 'Top Up'),
+            ],
+          ),
+          SizedBox(height: 10),
+          Row(
+            children: [
+              _ServiceItem(icon: Icons.local_hospital_outlined, label: 'Hospitals'),
+              SizedBox(width: 10),
+              _ServiceItem(icon: Icons.video_call_outlined, label: 'Teleconsult'),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ServiceItem extends StatelessWidget {
+  const _ServiceItem({required this.icon, required this.label});
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: Color(0xFF4A4A4A), size: 22),
+            SizedBox(width: 8),
+            Flexible(
+              child: Text(
+                label,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Color(0xFF4A4A4A),
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
           ],
         ),
       ),
