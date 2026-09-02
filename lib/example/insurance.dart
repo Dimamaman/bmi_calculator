@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -10,9 +9,16 @@ class InsuranceExample extends StatefulWidget {
   State<InsuranceExample> createState() => _InsuranceExampleState();
 }
 
+class User {
+  final String name;
+  final int age;
+  const User(this.name, {this.age = 4});
+}
+
 class _InsuranceExampleState extends State<InsuranceExample>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late final AnimationController expandedAnimationController;
+  late final AnimationController servicePageController;
 
   @override
   void initState() {
@@ -20,12 +26,28 @@ class _InsuranceExampleState extends State<InsuranceExample>
       vsync: this,
       duration: Duration(milliseconds: 500),
     );
+    servicePageController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 600),
+    );
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    expandedAnimationController.dispose();
+    servicePageController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
+    const a = 4;
+    var b = 5;
+    const list = [a, 4, 3, 4];
+    const list2 = [4, 3, 4, 5];
+
     return Scaffold(
       body: AnimatedBuilder(
         animation: expandedAnimationController,
@@ -45,43 +67,158 @@ class _InsuranceExampleState extends State<InsuranceExample>
             Positioned.fill(
               child: CustomPaint(painter: _MeshGradientPainter()),
             ),
-            Padding(
-              padding: EdgeInsets.only(top: 60, left: 8, right: 8),
-              child: SingleChildScrollView(
-                physics: NeverScrollableScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    _WelcomeHeader(),
-                    AnimatedBuilder(
-                      animation: expandedAnimationController,
-                      builder: (context, _) {
-                        final curvedT = Curves.easeInOut.transform(
-                          expandedAnimationController.value,
-                        );
-                        return SizedBox(height: (1 - curvedT) * 20);
-                      },
+            AnimatedBuilder(
+              animation: servicePageController,
+              builder: (context, _) {
+                final t = servicePageController.value;
+                final curvedT = Curves.easeInOut.transform(t);
+                final topOpacity = (1.0 - curvedT * 2.5).clamp(0.0, 1.0);
+                final bottomOpacity = (1.0 - curvedT * 2.5).clamp(0.0, 1.0);
+                return Padding(
+                  padding: EdgeInsets.only(top: 60, left: 8, right: 8),
+                  child: SingleChildScrollView(
+                    physics: NeverScrollableScrollPhysics(),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        _WelcomeHeader(),
+                        AnimatedBuilder(
+                          animation: expandedAnimationController,
+                          builder: (context, _) {
+                            final curvedT = Curves.easeInOut.transform(
+                              expandedAnimationController.value,
+                            );
+                            return SizedBox(height: (1 - curvedT) * 20);
+                          },
+                        ),
+                        SizedBox(height: 18),
+                        Transform.translate(
+                          offset: Offset(0, -curvedT * 80),
+                          child: Opacity(
+                            opacity: topOpacity,
+                            child: Column(
+                              children: [
+                                _ClaimsRow(
+                                  controller: expandedAnimationController,
+                                ),
+                                AnimatedBuilder(
+                                  animation: expandedAnimationController,
+                                  builder: (context, _) {
+                                    final curvedT = Curves.easeInOut.transform(
+                                      expandedAnimationController.value,
+                                    );
+                                    return SizedBox(height: (1 - curvedT) * 8);
+                                  },
+                                ),
+                                _UpcomingPremiumsCard(
+                                  controller: expandedAnimationController,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        Transform.translate(
+                          offset: Offset(0, curvedT * 100),
+                          child: Opacity(
+                            opacity: bottomOpacity,
+                            child: _ServicesSection(
+                              onServiceTap: () {
+                                servicePageController.forward();
+                              },
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                      ],
                     ),
-                    SizedBox(height: 18),
-                    _ClaimsRow(controller: expandedAnimationController),
-                    AnimatedBuilder(
-                      animation: expandedAnimationController,
-                      builder: (context, _) {
-                        final curvedT = Curves.easeInOut.transform(
-                          expandedAnimationController.value,
-                        );
-                        return SizedBox(height: (1 - curvedT) * 8);
-                      },
-                    ),
-                    _UpcomingPremiumsCard(
-                      controller: expandedAnimationController,
-                    ),
-                    SizedBox(height: 16),
-                    _ServicesSection(),
-                    SizedBox(height: 8),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              },
+            ),
+            AnimatedBuilder(
+              animation: servicePageController,
+              builder: (context, _) {
+                final t = servicePageController.value;
+                if (t == 0) return SizedBox.shrink();
+                final headerT = Curves.easeOut.transform(
+                  ((t - 0.2) / 0.5).clamp(0.0, 1.0),
+                );
+                final contentScaleT = Curves.easeOut.transform(
+                  ((t - 0.3) / 0.7).clamp(0.0, 1.0),
+                );
+                final card1T = Curves.easeOut.transform(
+                  ((t - 0.35) / 0.4).clamp(0.0, 1.0),
+                );
+                final card2T = Curves.easeOut.transform(
+                  ((t - 0.45) / 0.4).clamp(0.0, 1.0),
+                );
+                final card3T = Curves.easeOut.transform(
+                  ((t - 0.55) / 0.4).clamp(0.0, 1.0),
+                );
+                return Positioned.fill(
+                  child: Stack(
+                    children: [
+                      Transform.scale(
+                        scale: ui.lerpDouble(0.8, 1.0, contentScaleT)!,
+                        child: Opacity(
+                          opacity: contentScaleT,
+                          child: _MapPlaceholder(),
+                        ),
+                      ),
+                      Positioned(
+                        top: MediaQuery.of(context).padding.top + 10,
+                        left: 0,
+                        right: 0,
+                        child: Opacity(
+                          opacity: headerT,
+                          child: Transform.translate(
+                            offset: Offset(0, (1 - headerT) * 20),
+                            child: _HospitalsHeader(
+                              onBack: () => servicePageController.reverse(),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        left: 12,
+                        right: 12,
+                        bottom: 0,
+                        child: SafeArea(
+                          child: Column(
+                            children: [
+                              _SlidingHospitalCard(
+                                slideT: card1T,
+                                category: 'General & Primary Care',
+                                categoryColor: Color(0xFFE8A65A),
+                                name: 'Harmony General Hospital',
+                                address: 'Fenimore St 22A (2.3km)',
+                              ),
+                              SizedBox(height: 10),
+                              _SlidingHospitalCard(
+                                slideT: card2T,
+                                category: 'Dental & Oral Health',
+                                categoryColor: Color(0xFFD4837A),
+                                name: 'VitalSpring Medical',
+                                address: 'Fenimore St 22A (2.3km)',
+                              ),
+                              SizedBox(height: 10),
+                              _SlidingHospitalCard(
+                                slideT: card3T,
+                                category: 'Behavioral Health',
+                                categoryColor: Color(0xFF7AAFCF),
+                                name: 'ClearPath Wellness Center',
+                                address: 'Maple St 15B (3.1km)',
+                              ),
+                              SizedBox(height: 12),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
             _CloseButton(controller: expandedAnimationController),
           ],
@@ -283,7 +420,7 @@ class _ExpandablePremiumSection extends StatelessWidget {
             final buttonW = 160.0;
             final currentW = ui.lerpDouble(buttonW, maxW, curvedT)!;
             final textOpacity = (1.0 - curvedT * 3).clamp(0.0, 1.0);
-            log("NNNNNN  $currentW ~~~~~~ $textOpacity");
+            // log("NNNNNN  $currentW ~~~~~~ $textOpacity");
 
             double itemSlide(double start, double end) {
               final itemT = ((t - start) / (end - start)).clamp(0.0, 1.0);
@@ -610,7 +747,9 @@ class _PayNowRow extends StatelessWidget {
 }
 
 class _ServicesSection extends StatelessWidget {
-  const _ServicesSection();
+  const _ServicesSection({required this.onServiceTap});
+
+  final VoidCallback onServiceTap;
 
   @override
   Widget build(BuildContext context) {
@@ -634,25 +773,49 @@ class _ServicesSection extends StatelessWidget {
           SizedBox(height: 16),
           Row(
             children: [
-              _ServiceItem(icon: Icons.payment, label: 'Payment'),
+              _ServiceItem(
+                icon: Icons.payment,
+                label: 'Payment',
+                onTap: onServiceTap,
+              ),
               SizedBox(width: 10),
-              _ServiceItem(icon: Icons.download_rounded, label: 'Statement Download'),
+              _ServiceItem(
+                icon: Icons.download_rounded,
+                label: 'Statement Download',
+                onTap: onServiceTap,
+              ),
             ],
           ),
           SizedBox(height: 10),
           Row(
             children: [
-              _ServiceItem(icon: Icons.chat_bubble_outline, label: 'Chat with Us'),
+              _ServiceItem(
+                icon: Icons.chat_bubble_outline,
+                label: 'Chat with Us',
+                onTap: onServiceTap,
+              ),
               SizedBox(width: 10),
-              _ServiceItem(icon: Icons.star_outline, label: 'Top Up'),
+              _ServiceItem(
+                icon: Icons.star_outline,
+                label: 'Top Up',
+                onTap: onServiceTap,
+              ),
             ],
           ),
           SizedBox(height: 10),
           Row(
             children: [
-              _ServiceItem(icon: Icons.local_hospital_outlined, label: 'Hospitals'),
+              _ServiceItem(
+                icon: Icons.local_hospital_outlined,
+                label: 'Hospitals',
+                onTap: onServiceTap,
+              ),
               SizedBox(width: 10),
-              _ServiceItem(icon: Icons.video_call_outlined, label: 'Teleconsult'),
+              _ServiceItem(
+                icon: Icons.video_call_outlined,
+                label: 'Teleconsult',
+                onTap: onServiceTap,
+              ),
             ],
           ),
         ],
@@ -662,37 +825,295 @@ class _ServicesSection extends StatelessWidget {
 }
 
 class _ServiceItem extends StatelessWidget {
-  const _ServiceItem({required this.icon, required this.label});
+  const _ServiceItem({required this.icon, required this.label, this.onTap});
 
   final IconData icon;
   final String label;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: Color(0xFF4A4A4A), size: 22),
-            SizedBox(width: 8),
-            Flexible(
-              child: Text(
-                label,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: Color(0xFF4A4A4A),
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Row(
+            children: [
+              Icon(icon, color: Color(0xFF4A4A4A), size: 22),
+              SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  label,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Color(0xFF4A4A4A),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
+      ),
+    );
+  }
+}
+
+class _HospitalsHeader extends StatelessWidget {
+  const _HospitalsHeader({required this.onBack});
+
+  final VoidCallback onBack;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: onBack,
+            child: Icon(Icons.arrow_back, color: Color(0xFF1C1C1E), size: 24),
+          ),
+          SizedBox(width: 12),
+          Text(
+            'Hospitals',
+            style: TextStyle(
+              color: Color(0xFF1C1C1E),
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          Spacer(),
+          _HeaderIcon(Icons.splitscreen),
+          SizedBox(width: 12),
+          _HeaderIcon(Icons.menu),
+        ],
+      ),
+    );
+  }
+}
+
+class _SlidingHospitalCard extends StatelessWidget {
+  const _SlidingHospitalCard({
+    required this.slideT,
+    required this.category,
+    required this.categoryColor,
+    required this.name,
+    required this.address,
+  });
+
+  final double slideT;
+  final String category;
+  final Color categoryColor;
+  final String name;
+  final String address;
+
+  @override
+  Widget build(BuildContext context) {
+    return Transform.translate(
+      offset: Offset(0, (1 - slideT) * 60),
+      child: Opacity(
+        opacity: slideT,
+        child: _HospitalCard(
+          category: category,
+          categoryColor: categoryColor,
+          name: name,
+          address: address,
+        ),
+      ),
+    );
+  }
+}
+
+class _HeaderIcon extends StatelessWidget {
+  const _HeaderIcon(this.icon);
+
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 38,
+      height: 38,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Color(0xFFE8E4E0),
+      ),
+      child: Icon(icon, color: Color(0xFF4A4A4A), size: 18),
+    );
+  }
+}
+
+class _MapPlaceholder extends StatelessWidget {
+  const _MapPlaceholder();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      color: Color(0xFFE8E4DF),
+      child: Stack(
+        children: [
+          Positioned.fill(child: CustomPaint(painter: _MapGridPainter())),
+          Positioned(top: 100, left: 80, child: _MapPin(Color(0xFFE8A65A))),
+          Positioned(top: 160, left: 200, child: _MapPin(Color(0xFFD4837A))),
+          Positioned(top: 220, left: 130, child: _MapPin(Color(0xFF7AAFCF))),
+        ],
+      ),
+    );
+  }
+}
+
+class _MapPin extends StatelessWidget {
+  const _MapPin(this.color);
+
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 28,
+      height: 28,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.white, width: 3),
+        boxShadow: [
+          BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2)),
+        ],
+      ),
+      child: Icon(Icons.local_hospital, color: Colors.white, size: 14),
+    );
+  }
+}
+
+class _MapGridPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Color(0xFFD5D0CB)
+      ..strokeWidth = 0.5;
+
+    for (double y = 0; y < size.height; y += 40) {
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+    }
+    for (double x = 0; x < size.width; x += 50) {
+      canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
+    }
+
+    final roadPaint = Paint()
+      ..color = Color(0xFFF5F2EF)
+      ..strokeWidth = 8;
+
+    canvas.drawLine(
+      Offset(0, size.height * 0.35),
+      Offset(size.width, size.height * 0.4),
+      roadPaint,
+    );
+    canvas.drawLine(
+      Offset(size.width * 0.3, 0),
+      Offset(size.width * 0.35, size.height),
+      roadPaint,
+    );
+    canvas.drawLine(
+      Offset(size.width * 0.7, 0),
+      Offset(size.width * 0.65, size.height),
+      roadPaint,
+    );
+    canvas.drawLine(
+      Offset(0, size.height * 0.7),
+      Offset(size.width, size.height * 0.65),
+      roadPaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _HospitalCard extends StatelessWidget {
+  const _HospitalCard({
+    required this.category,
+    required this.categoryColor,
+    required this.name,
+    required this.address,
+  });
+
+  final String category;
+  final Color categoryColor;
+  final String name;
+  final String address;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 70,
+            height: 70,
+            decoration: BoxDecoration(
+              color: categoryColor.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Icon(Icons.local_hospital, color: categoryColor, size: 30),
+          ),
+          SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: categoryColor.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    category,
+                    style: TextStyle(
+                      color: categoryColor,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 6),
+                Text(
+                  name,
+                  style: TextStyle(
+                    color: Color(0xFF1C1C1E),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Row(
+                  children: [
+                    Icon(Icons.location_on, color: Color(0xFF8E8E93), size: 14),
+                    SizedBox(width: 4),
+                    Text(
+                      address,
+                      style: TextStyle(color: Color(0xFF8E8E93), fontSize: 13),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
