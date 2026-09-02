@@ -1,4 +1,4 @@
-import 'package:bmi_calculator/example/nfc_payment_animation.dart';
+import 'package:bmi_calculator/example/bottom_nav_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -10,9 +10,9 @@ void main() {
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-      systemNavigationBarColor: Color(0xFF0B0B1A),
-      systemNavigationBarIconBrightness: Brightness.light,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: Color(0xFFF8F8FC),
+      systemNavigationBarIconBrightness: Brightness.dark,
     ),
   );
   SystemChrome.setPreferredOrientations([
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'BMI Calculator',
       theme: ThemeData(primaryColor: mainBlue, fontFamily: 'SF Pro Display'),
-      home: const NfcPaymentAnimationPage(),
+      home: const BottomNavAnimationPage(),
     );
   }
 }
