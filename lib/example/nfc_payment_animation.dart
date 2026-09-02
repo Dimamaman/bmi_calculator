@@ -133,7 +133,7 @@ class _NfcPaymentAnimationPageState extends State<NfcPaymentAnimationPage>
         animation: Listenable.merge([_rippleCtrl, _transCtrl, _successCtrl]),
         builder: (context, _) {
           final procOpacity = (1 - _fadeOut.value).clamp(0.0, 1.0);
-          final succOpacity = _fadeIn.value.clamp(0.0, 1.0);
+          final successOpacity = _fadeIn.value.clamp(0.0, 1.0);
 
           return Stack(
             children: [
@@ -142,8 +142,8 @@ class _NfcPaymentAnimationPageState extends State<NfcPaymentAnimationPage>
                 _buildPurpleGlow(procOpacity),
                 Opacity(opacity: procOpacity, child: _buildProcessing()),
               ],
-              if (succOpacity > 0)
-                Opacity(opacity: succOpacity, child: _buildSuccess()),
+              if (successOpacity > 0)
+                Opacity(opacity: successOpacity, child: _buildSuccess()),
             ],
           );
         },
