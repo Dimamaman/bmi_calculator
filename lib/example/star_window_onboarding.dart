@@ -33,6 +33,8 @@ class _StarWindowOnboardingPageState extends State<StarWindowOnboardingPage>
   late AnimationController _travelCtrl;
   late AnimationController _rotateCtrl;
 
+  bool _stopped = false;
+
   @override
   void initState() {
     super.initState();
@@ -54,10 +56,22 @@ class _StarWindowOnboardingPageState extends State<StarWindowOnboardingPage>
     super.dispose();
   }
 
+  void _onGetStarted() {
+    if (_stopped) {
+      _stopped = false;
+      _travelCtrl.repeat();
+      _rotateCtrl.repeat();
+    }
+  }
+
   static const _lineHeight = 1.15;
   static const _fontSize = 46.0;
   static const _vertPad = 2.0;
   static const _itemH = _fontSize * _lineHeight + _vertPad * 2;
+
+  double _easedTravel(double t) {
+    return Curves.easeOutCubic.transform(t);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +86,8 @@ class _StarWindowOnboardingPageState extends State<StarWindowOnboardingPage>
               final screenW = constraints.maxWidth;
               final starR = screenW * 0.55;
               final totalTravel = screenH + starR * 2;
-              final starCenterY = -starR + _travelCtrl.value * totalTravel;
+              final eased = _easedTravel(_travelCtrl.value);
+              final starCenterY = -starR + eased * totalTravel;
               final starCenterX = screenW * 0.22;
               final rotation = _rotateCtrl.value * 2 * pi;
 
@@ -86,9 +101,16 @@ class _StarWindowOnboardingPageState extends State<StarWindowOnboardingPage>
                 }
               }
 
+              if (!_stopped &&
+                  activeIndex == _words.length - 1 &&
+                  _travelCtrl.value > 0.85) {
+                _stopped = true;
+                _travelCtrl.stop();
+                _rotateCtrl.stop();
+              }
+
               return Stack(
                 children: [
-                  // Layer 1: Star (behind text)
                   Positioned.fill(
                     child: CustomPaint(
                       painter: _StarPainter(
@@ -100,7 +122,6 @@ class _StarWindowOnboardingPageState extends State<StarWindowOnboardingPage>
                     ),
                   ),
 
-                  // Layer 2: Text (on top of star)
                   Positioned.fill(
                     child: Padding(
                       padding: EdgeInsets.only(top: topOffset, left: 16),
@@ -132,40 +153,42 @@ class _StarWindowOnboardingPageState extends State<StarWindowOnboardingPage>
                     ),
                   ),
 
-                  // Get Started button
                   Positioned(
                     left: 24,
                     right: 24,
                     bottom: 50,
                     child: SafeArea(
                       top: false,
-                      child: Container(
-                        height: 60,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(
-                            color: Colors.black.withValues(alpha: 0.15),
+                      child: GestureDetector(
+                        onTap: _onGetStarted,
+                        child: Container(
+                          height: 60,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            border: Border.all(
+                              color: Colors.black.withValues(alpha: 0.15),
+                            ),
+                            color: _bg.withValues(alpha: 0.5),
                           ),
-                          color: _bg.withValues(alpha: 0.5),
-                        ),
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Get Started',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black87,
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Get Started',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87,
+                                ),
                               ),
-                            ),
-                            SizedBox(width: 12),
-                            Icon(
-                              Icons.chevron_right_rounded,
-                              color: Colors.black87,
-                              size: 24,
-                            ),
-                          ],
+                              SizedBox(width: 12),
+                              Icon(
+                                Icons.chevron_right_rounded,
+                                color: Colors.black87,
+                                size: 24,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
