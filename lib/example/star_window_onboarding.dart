@@ -111,6 +111,15 @@ class _StarWindowOnboardingPageState extends State<StarWindowOnboardingPage>
 
               return Stack(
                 children: [
+                  // Layer 1: Dim text (PASTDA — yulduz orqasida)
+                  Positioned.fill(
+                    child: _buildTextColumn(
+                      topOffset: topOffset,
+                      activeIndex: -1,
+                    ),
+                  ),
+
+                  // Layer 2: Yulduz (USTIDA — dim matnni yopadi)
                   Positioned.fill(
                     child: CustomPaint(
                       painter: _StarPainter(
@@ -122,37 +131,23 @@ class _StarWindowOnboardingPageState extends State<StarWindowOnboardingPage>
                     ),
                   ),
 
-                  Positioned.fill(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: topOffset, left: 16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: List.generate(_words.length, (i) {
-                          final isActive = i == activeIndex;
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: _vertPad,
-                            ),
-                            child: Text(
-                              _words[i],
-                              style: TextStyle(
-                                fontSize: _fontSize,
-                                fontWeight: isActive
-                                    ? FontWeight.w900
-                                    : FontWeight.w600,
-                                color: isActive ? Colors.black : _dimText,
-                                height: _lineHeight,
-                                fontStyle: isActive
-                                    ? FontStyle.normal
-                                    : FontStyle.italic,
-                              ),
-                            ),
-                          );
-                        }),
+                  // Layer 3: Faqat aktiv so'z (ENG USTIDA — to'liq ko'rinadi)
+                  if (activeIndex >= 0)
+                    Positioned(
+                      left: 16,
+                      top: topOffset + activeIndex * _itemH + _vertPad,
+                      child: Text(
+                        _words[activeIndex],
+                        style: const TextStyle(
+                          fontSize: _fontSize,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.black,
+                          height: _lineHeight,
+                        ),
                       ),
                     ),
-                  ),
 
+                  // Get Started button
                   Positioned(
                     left: 24,
                     right: 24,
@@ -198,6 +193,33 @@ class _StarWindowOnboardingPageState extends State<StarWindowOnboardingPage>
             },
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildTextColumn({
+    required double topOffset,
+    required int activeIndex,
+  }) {
+    return Padding(
+      padding: EdgeInsets.only(top: topOffset, left: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: List.generate(_words.length, (i) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: _vertPad),
+            child: Text(
+              _words[i],
+              style: const TextStyle(
+                fontSize: _fontSize,
+                fontWeight: FontWeight.w600,
+                color: _dimText,
+                height: _lineHeight,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          );
+        }),
       ),
     );
   }
