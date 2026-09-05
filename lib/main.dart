@@ -1,4 +1,4 @@
-import 'package:bmi_calculator/example/envelope_open.dart';
+import 'package:bmi_calculator/example/pull_to_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -11,7 +11,7 @@ void main() {
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarColor: Color(0xFFB8DCF0),
+      systemNavigationBarColor: Color(0xFFF5F7FA),
       systemNavigationBarIconBrightness: Brightness.dark,
     ),
   );
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'BMI Calculator',
       theme: ThemeData(primaryColor: mainBlue, fontFamily: 'SF Pro Display'),
-      home: const EnvelopeOpenPage(),
+      home: const PullToRefreshPage(),
     );
   }
 }
