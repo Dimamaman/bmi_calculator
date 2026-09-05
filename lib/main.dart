@@ -1,4 +1,4 @@
-import 'package:bmi_calculator/example/solar_system.dart';
+import 'package:bmi_calculator/example/star_window_onboarding.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -11,7 +11,7 @@ void main() {
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarColor: Color(0xFF0B0E1A),
+      systemNavigationBarColor: Color(0xFFE8836A),
       systemNavigationBarIconBrightness: Brightness.dark,
     ),
   );
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'BMI Calculator',
       theme: ThemeData(primaryColor: mainBlue, fontFamily: 'SF Pro Display'),
-      home: const SolarSystemPage(),
+      home: const StarWindowOnboardingPage(),
     );
   }
 }
